@@ -1,4 +1,4 @@
-package com.meng.shiro.bean.dao;
+package com.meng.shiro.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -14,15 +15,16 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 @TableName("sys_resource")
-public class ResourceDO extends Model<ResourceDO> {
+public class Resource extends Model<Resource> {
 
     private static final long serialVersionUID = -3734186975559806202L;
     /**
      * 主键
      */
     @TableId(value = "resource_id")
-    private String resourceId;
+    private Long resourceId;
     /**
      * 资源名称
      */
@@ -34,7 +36,7 @@ public class ResourceDO extends Model<ResourceDO> {
     /**
      * 类型
      */
-    private String type;
+    private Integer type;
     /**
      * url
      */
@@ -46,7 +48,7 @@ public class ResourceDO extends Model<ResourceDO> {
     /**
      * 父元素id
      */
-    private String parentId;
+    private Long parentId;
     /**
      * 排序
      */
@@ -62,7 +64,7 @@ public class ResourceDO extends Model<ResourceDO> {
     /**
      * 修改时间
      */
-    private String updateTime;
+    private String modifiedTime;
     /**
      * 是否锁定
      */

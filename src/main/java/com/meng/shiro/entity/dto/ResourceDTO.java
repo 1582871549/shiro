@@ -1,6 +1,7 @@
-package com.meng.shiro.bean.dto;
+package com.meng.shiro.entity.dto;
 
 import com.meng.shiro.base.BaseDTO;
+import com.meng.shiro.entity.ResourceDTOConvert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,13 +12,13 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ResourceDTO extends BaseDTO {
+public class ResourceDTO extends BaseDTO implements ResourceDTOConvert {
 
     private static final long serialVersionUID = 7225989106023399374L;
     /**
      * 资源id
      */
-    private String resourceId;
+    private Long resourceId;
     /**
      * 资源名称
      */
@@ -29,7 +30,7 @@ public class ResourceDTO extends BaseDTO {
     /**
      * 类型
      */
-    private String type;
+    private Integer type;
     /**
      * url
      */
@@ -41,7 +42,7 @@ public class ResourceDTO extends BaseDTO {
     /**
      * 父元素id
      */
-    private String parentId;
+    private Long parentId;
     /**
      * 排序
      */

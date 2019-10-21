@@ -9,13 +9,12 @@
  */
 package com.meng.shiro.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.meng.shiro.bean.dao.CopyDemo;
-import com.meng.shiro.bean.dao.UserDO;
-import com.meng.shiro.bean.dto.UserDTO;
-import com.meng.shiro.dao.UserMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.meng.shiro.entity.dto.UserDTO;
+import com.meng.shiro.entity.po.User;
 import com.meng.shiro.exception.BusinessException;
+import com.meng.shiro.mapper.UserMapper;
+import com.meng.shiro.util.ResultUtil;
 import com.meng.shiro.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -27,9 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -51,57 +48,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
-
-    @Override
-    public UserDTO getById(long id) {
-        UserDTO userDTO = new UserDTO();
-        UserDO userDO = userMapper.selectById(id);
-        CopyDemo.copyPropertiesIgnoreNull(userDO, userDTO);
-        return userDTO;
-    }
-
-    @Override
-    public List<UserDTO> list() {
-        List<UserDO> userDOList = userMapper.selectList(null);
-        List<UserDTO> userDTOList = new ArrayList<>();
-        for (UserDO userDO : userDOList) {
-            UserDTO userDTO = new UserDTO();
-            CopyDemo.copyPropertiesIgnoreNull(userDO, userDTO);
-            userDTOList.add(userDTO);
-        }
-        return userDTOList;
-    }
-
-    @Override
-    public IPage<UserDTO> listByPage(IPage<UserDTO> page, Wrapper<UserDTO> queryWrapper) {
-        return null;
-    }
-
-    @Override
-    public long insert(UserDTO entity) {
-        return 0;
-    }
-
-    @Override
-    public int update(UserDTO entity) {
-        return 0;
-    }
-
-    @Override
-    public int delete(long id) {
-        return 0;
-    }
-
-    @Override
-    public int deleteBatchIds(Collection<? extends Serializable> ids) {
-        return 0;
-    }
-
-    @Override
-    public UserDTO getUserByUsername(String username) {
-        return null;
-    }
-
 
     @Override
     public void login(UserDTO userDTO) {
@@ -140,6 +86,48 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDTO getUser(Long id) {
+        return new UserDTO().doBackward(userMapper.selectById(id));
+    }
+
+    @Override
+    public UserDTO getUser(String username) {
+        return new UserDTO().doBackward(userMapper.selectOne(new QueryWrapper<User>().eq("username", username)));
+    }
+
+    @Override
+    public List<UserDTO> listUsers() {
+        List<UserDTO> userDTOS = new ArrayList<>(200);
+        for (User user : userMapper.selectList(null)) {
+            userDTOS.add(new UserDTO().doBackward(user));
+        }
+        return userDTOS;
+    }
+
+    @Override
+    public boolean saveUser(UserDTO userDTO) {
+        return ResultUtil.returnBool(userMapper.insert(userDTO.doForward(userDTO)));
+    }
+
+    @Override
+    public boolean saveOrUpdateUser(UserDTO userDTO) {
+        if (userDTO == null) {
+            return false;
+        }
+        Long userId = userDTO.getUserId();
+        return userId == null || getUser(userId) == null ? saveUser(userDTO) : updateUser(userDTO);
+    }
+
+    @Override
+    public boolean updateUser(UserDTO userDTO) {
+        return ResultUtil.returnBool(userMapper.updateById(userDTO.doForward(userDTO)));
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        return ResultUtil.returnBool(userMapper.deleteById(id));
+    }
 
 
 }

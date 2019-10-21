@@ -1,4 +1,4 @@
-package com.meng.shiro.bean.vo;
+package com.meng.shiro.entity.vo;
 
 import com.meng.shiro.base.BaseVO;
 import lombok.Data;

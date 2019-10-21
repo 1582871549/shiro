@@ -9,9 +9,7 @@
  */
 package com.meng.shiro.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.meng.shiro.bean.dto.RoleDTO;
+import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.manager.RoleManager;
 import com.meng.shiro.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,38 +38,4 @@ public class RoleServiceImpl implements RoleService {
         this.roleManager = roleManager;
     }
 
-    @Override
-    public List<RoleDTO> listRole() {
-        return roleManager.listRole();
-    }
-
-    @Override
-    public List<RoleDTO> listRoleByUserId(String userId) {
-        return roleManager.listRoleByUserId(userId);
-    }
-
-    @Override
-    public IPage<RoleDTO> listRoleByPage(IPage<RoleDTO> page, Wrapper<RoleDTO> queryWrapper) {
-        return roleManager.listRoleByPage(page, queryWrapper);
-    }
-
-    @Override
-    public int saveRole(RoleDTO roleDTO) {
-        return roleManager.saveRole(roleDTO);
-    }
-
-    @Override
-    public int updateRole(RoleDTO roleDTO) {
-        return roleManager.updateRole(roleDTO);
-    }
-
-    @Override
-    public int deleteRoleById(String roleId) {
-        return roleManager.deleteRoleById(roleId);
-    }
-
-    @Override
-    public int deleteRoleBatchByIds(List<String> idList) {
-        return roleManager.deleteRoleBatchByIds(idList);
-    }
 }

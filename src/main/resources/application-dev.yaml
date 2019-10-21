@@ -24,7 +24,13 @@ mybatis-plus:
   type-aliases-package: com.meng.shiro.bean
   mapper-locations: classpath:mapper/*.Mapper.xml
 
+
 my:
   name: qweqweqwe
+
+logging:
+  level:
+    com.meng.shiro: debug
+
 
 

@@ -33,7 +33,7 @@ public abstract class BaseDTO implements Serializable {
     /**
      * 修改时间
      */
-    private String updateTime;
+    private String modifiedTime;
     /**
      * 是否锁定(0:false 1:true)
      */

@@ -1,4 +1,4 @@
-package com.meng.shiro.bean.dao;
+package com.meng.shiro.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -25,14 +25,14 @@ import java.io.Serializable;
 @Setter
 @ToString
 @TableName(value = "sys_role")
-public class RoleDO extends Model<RoleDO> {
+public class Role extends Model<Role> {
 
     private static final long serialVersionUID = 80327963628797536L;
     /**
      * 主键
      */
     @TableId(value = "role_id")
-    private String roleId;
+    private Long roleId;
     /**
      * 角色名称
      */
@@ -48,9 +48,9 @@ public class RoleDO extends Model<RoleDO> {
     /**
      * 修改时间
      */
-    private String updateTime;
+    private String modifiedTime;
     /**
-     * 是否锁定
+     * 是否锁定(0:false 1:true)
      */
     @TableField("is_locked")
     private Boolean locked;

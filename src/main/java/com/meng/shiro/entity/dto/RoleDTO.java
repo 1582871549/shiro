@@ -1,6 +1,7 @@
-package com.meng.shiro.bean.dto;
+package com.meng.shiro.entity.dto;
 
 import com.meng.shiro.base.BaseDTO;
+import com.meng.shiro.entity.RoleDTOConvert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,13 +14,13 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class RoleDTO extends BaseDTO {
+public class RoleDTO extends BaseDTO implements RoleDTOConvert {
 
     private static final long serialVersionUID = -8532970873838122778L;
     /**
      * 角色id
      */
-    private String roleId;
+    private Long roleId;
     /**
      * 角色名称
      */

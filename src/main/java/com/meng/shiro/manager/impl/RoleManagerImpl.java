@@ -9,16 +9,12 @@
  */
 package com.meng.shiro.manager.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.meng.shiro.bean.dao.CopyDemo;
-import com.meng.shiro.bean.dao.ResourceDO;
-import com.meng.shiro.bean.dao.RoleDO;
-import com.meng.shiro.bean.dto.RoleDTO;
-import com.meng.shiro.dao.ResourceMapper;
-import com.meng.shiro.dao.RoleMapper;
+import com.meng.shiro.entity.dto.RoleDTO;
+import com.meng.shiro.entity.po.Role;
 import com.meng.shiro.manager.RoleManager;
+import com.meng.shiro.mapper.ResourceMapper;
+import com.meng.shiro.mapper.RoleMapper;
+import com.meng.shiro.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,55 +44,40 @@ public class RoleManagerImpl implements RoleManager {
     }
 
     @Override
-    public List<RoleDTO> listRole() {
-        List<RoleDO> roleDOList = roleMapper.selectList(null);
-        List<RoleDTO> roleDTOList = new ArrayList<>();
-        for (RoleDO roleDO : roleDOList) {
-            RoleDTO roleDTO = new RoleDTO();
-            CopyDemo.copyPropertiesIgnoreNull(roleDO, roleDTO);
-            roleDTOList.add(roleDTO);
+    public RoleDTO getRole(Long id) {
+        return new RoleDTO().doBackward(roleMapper.selectById(id));
+    }
+
+    @Override
+    public List<RoleDTO> listRoles() {
+        List<RoleDTO> roleDTOS = new ArrayList<>(200);
+        for (Role role : roleMapper.selectList(null)) {
+            roleDTOS.add(new RoleDTO().doBackward(role));
         }
-        return roleDTOList;
+        return roleDTOS;
     }
 
     @Override
-    public List<RoleDTO> listRoleByUserId(String userId) {
+    public boolean saveRole(RoleDTO roleDTO) {
+        return ResultUtil.returnBool(roleMapper.insert(roleDTO.doForward(roleDTO)));
+    }
 
-        QueryWrapper<Object> wrapper = new QueryWrapper<>();
-        List<ResourceDO> resourceDOList = resourceMapper.selectList(null);
-
-        List<RoleDO> roleDOList = roleMapper.selectList(null);
-        List<RoleDTO> roleDTOList = new ArrayList<>();
-        for (RoleDO roleDO : roleDOList) {
-            RoleDTO roleDTO = new RoleDTO();
-            CopyDemo.copyPropertiesIgnoreNull(roleDO, roleDTO);
-            roleDTOList.add(roleDTO);
+    @Override
+    public boolean saveOrUpdateRole(RoleDTO roleDTO) {
+        if (roleDTO == null) {
+            return false;
         }
-        return null;
+        Long roleId = roleDTO.getRoleId();
+        return roleId == null || getRole(roleId) == null ? saveRole(roleDTO) : updateRole(roleDTO);
     }
 
     @Override
-    public IPage<RoleDTO> listRoleByPage(IPage<RoleDTO> page, Wrapper<RoleDTO> queryWrapper) {
-        return null;
+    public boolean updateRole(RoleDTO roleDTO) {
+        return ResultUtil.returnBool(roleMapper.updateById(roleDTO.doForward(roleDTO)));
     }
 
     @Override
-    public int saveRole(RoleDTO roleDTO) {
-        return 0;
-    }
-
-    @Override
-    public int updateRole(RoleDTO roleDTO) {
-        return 0;
-    }
-
-    @Override
-    public int deleteRoleById(String roleId) {
-        return 0;
-    }
-
-    @Override
-    public int deleteRoleBatchByIds(List<String> idList) {
-        return 0;
+    public boolean deleteRole(Long id) {
+        return ResultUtil.returnBool(roleMapper.deleteById(id));
     }
 }

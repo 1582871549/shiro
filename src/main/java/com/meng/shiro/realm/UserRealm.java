@@ -9,9 +9,9 @@
  */
 package com.meng.shiro.realm;
 
-import com.meng.shiro.bean.dto.ResourceDTO;
-import com.meng.shiro.bean.dto.RoleDTO;
-import com.meng.shiro.bean.dto.UserDTO;
+import com.meng.shiro.entity.dto.ResourceDTO;
+import com.meng.shiro.entity.dto.RoleDTO;
+import com.meng.shiro.entity.dto.UserDTO;
 import com.meng.shiro.service.UserService;
 import com.meng.shiro.util.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +68,7 @@ public class UserRealm extends AuthorizingRealm {
             return authorizationInfo;
         }
 
-        UserDTO userDTO = userService.getUserByUsername(username);
+        UserDTO userDTO = userService.getUser(username);
 
         if (userDTO == null) {
             return authorizationInfo;
@@ -107,7 +107,7 @@ public class UserRealm extends AuthorizingRealm {
 
         // 通过username从数据库中查找 User对象，如果找到，没找到.
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        UserDTO userDTO = userService.getUserByUsername(username);
+        UserDTO userDTO = userService.getUser(username);
 
         if (userDTO == null) {
             throw new UnknownAccountException();

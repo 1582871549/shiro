@@ -9,7 +9,7 @@
  */
 package com.meng.shiro.util;
 
-import com.meng.shiro.bean.dto.UserDTO;
+import com.meng.shiro.entity.dto.UserDTO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;

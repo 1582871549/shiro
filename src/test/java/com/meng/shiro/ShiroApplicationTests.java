@@ -1,9 +1,9 @@
 package com.meng.shiro;
 
-import com.meng.shiro.bean.dto.RoleDTO;
-import com.meng.shiro.bean.dto.UserDTO;
 import com.meng.shiro.config.DruidProperties;
 import com.meng.shiro.config.MyProperties;
+import com.meng.shiro.entity.dto.UserDTO;
+import com.meng.shiro.entity.po.User;
 import com.meng.shiro.service.RoleService;
 import com.meng.shiro.service.UserService;
 import org.junit.Test;
@@ -29,15 +29,19 @@ public class ShiroApplicationTests {
 
     @Test
     public void contextLoads() {
-        List<UserDTO> users = userService.listUser();
-        System.out.println(users);
+
+        List<UserDTO> list = userService.listUsers();
+        System.out.println(list);
     }
 
     @Test
-    public void listRoleTest() {
-        List<RoleDTO> roleDTOList = roleService.listRole();
-        for (RoleDTO roleDTO : roleDTOList) {
-            System.out.println(roleDTO);
+    public void listUserTest() {
+        List<UserDTO> dtos = userService.listUsers();
+
+        System.out.println("list : " + dtos);
+
+        for (UserDTO dto : dtos) {
+            System.out.println(dto);
         }
 
     }
@@ -47,6 +51,16 @@ public class ShiroApplicationTests {
         System.out.println("name = " + myProperties);
         System.out.println(druidProperties);
         System.out.println("------------------");
+    }
+
+    @Test
+    public void aaa(){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName("dudu");
+        userDTO.setPhone("123");
+
+        User user = userDTO.doForward(userDTO);
+        System.out.println(user);
     }
 
 }

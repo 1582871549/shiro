@@ -4,6 +4,8 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcConstants;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.sql.SQLException;
 
@@ -12,18 +14,20 @@ import java.sql.SQLException;
  * <p>说明:这个类中包含了许多默认配置,若这些配置符合您的情况,您可以不用管,若不符合,建议不要修改本类,建议直接在"application.yml"中配置即可</p>
  */
 @Data
+@Configuration
+@PropertySource(value = "classpath:config/jdbc.properties")
 @ConfigurationProperties(prefix = DruidProperties.PREFIX)
 public class DruidProperties {
 
-    public static final String PREFIX = "spring.datasource";
+    public static final String PREFIX = "jdbc";
 
-    private String url = "jdbc:mysql://localhost:3306/music?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&serverTimezone=UTC";
+    private String url = "jdbc:mysql://localhost:3306/music?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&serverTimezone=UTC&allowMultiQueries=true";
+
+    private String driverClassName = "com.mysql.cj.jdbc.Driver";
 
     private String username = "dudu";
 
     private String password = "dudu";
-
-    private String driverClassName = "com.mysql.cj.jdbc.Driver";
 
     private Integer initialSize = 10;
 

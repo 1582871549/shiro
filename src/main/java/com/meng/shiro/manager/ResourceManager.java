@@ -9,7 +9,7 @@
  */
 package com.meng.shiro.manager;
 
-import com.meng.shiro.entity.dto.RoleDTO;
+import com.meng.shiro.entity.dto.ResourceDTO;
 
 import java.util.List;
 
@@ -21,46 +21,46 @@ import java.util.List;
  * @create 2019/8/12
  * @since 1.0.0
  */
-public interface RoleManager {
+public interface ResourceManager {
 
     /**
-     * 查询单个角色
+     * 查询单个资源
      *
      * @param id 主键
-     * @return 角色
+     * @return 资源
      */
-    RoleDTO getRole(Long id);
+    ResourceDTO getResource(Long id);
 
     /**
-     * 查询角色集合
+     * 查询资源集合
      *
-     * @return 角色集合
+     * @return 资源集合
      */
-    List<RoleDTO> listRoles();
+    List<ResourceDTO> listResources();
 
     /**
      * 插入一条记录
      *
-     * @param roleDTO 实体对象
+     * @param resourceDTO 实体对象
      * @return 逻辑值
      */
-    boolean saveRole(RoleDTO roleDTO);
+    boolean saveResource(ResourceDTO resourceDTO);
 
     /**
      * 主键存在则更新记录，否则插入一条记录
      *
-     * @param roleDTO 实体对象
+     * @param resourceDTO 实体对象
      * @return 逻辑值
      */
-    boolean saveOrUpdateRole(RoleDTO roleDTO);
+    boolean saveOrUpdateResource(ResourceDTO resourceDTO);
 
     /**
      * 修改一条记录
      *
-     * @param roleDTO 实体对象
+     * @param resourceDTO 实体对象
      * @return 逻辑值
      */
-    boolean updateRole(RoleDTO roleDTO);
+    boolean updateResource(ResourceDTO resourceDTO);
 
     /**
      * 删除一条记录
@@ -68,5 +68,5 @@ public interface RoleManager {
      * @param id 主键
      * @return 逻辑值
      */
-    boolean deleteRole(Long id);
+    boolean deleteResource(Long id);
 }

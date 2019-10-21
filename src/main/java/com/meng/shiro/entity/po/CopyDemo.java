@@ -7,10 +7,9 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package com.meng.shiro.bean.dao;
+package com.meng.shiro.entity.po;
 
 import com.meng.shiro.config.MyProperties;
-import com.meng.shiro.util.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;

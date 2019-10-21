@@ -1,4 +1,4 @@
-package com.meng.shiro.bean.dao;
+package com.meng.shiro.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,21 +7,23 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
+@Accessors(chain = true)
 @TableName("sys_user")
-public class UserDO extends Model<UserDO> {
+public class User extends Model<User> {
 
     private static final long serialVersionUID = 7838569805393187805L;
     /**
      * 主键
      */
     @TableId(value = "user_id")
-    private String userId;
+    private Long userId;
     /**
      * 用户名
      */
@@ -39,6 +41,10 @@ public class UserDO extends Model<UserDO> {
      */
     private String name;
     /**
+     * 性别(0:女 1:男 2:不详)
+     */
+    private Integer sex;
+    /**
      * 手机号
      */
     private String phone;
@@ -47,26 +53,22 @@ public class UserDO extends Model<UserDO> {
      */
     private String photo;
     /**
-     * 性别(0:女 1:男 2:不详)
-     */
-    private String sex;
-    /**
-     * 是否锁定(0:false 1:true)
-     */
-    @TableField("is_locked")
-    private Boolean locked;
-    /**
      * 创建时间
      */
     private String createTime;
     /**
      * 修改时间
      */
-    private String updateTime;
+    private String modifiedTime;
     /**
      * 最后登陆时间
      */
-    private String lastTime;
+    private String lastLoginTime;
+    /**
+     * 是否锁定(0:false 1:true)
+     */
+    @TableField("is_locked")
+    private Boolean locked;
 
     @Override
     protected Serializable pkVal() {

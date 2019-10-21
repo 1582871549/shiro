@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableTransactionManagement(order = 2)
-@MapperScan(basePackages = {"com.meng.shiro.dao"})
+@MapperScan(basePackages = {"com.meng.shiro.mapper"})
 public class MybatisPlusConfig {
 
     @Resource
