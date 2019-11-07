@@ -29,8 +29,7 @@ my:
   name: qweqweqwe
 
 logging:
-  level:
-    com.meng.shiro: debug
+  config: classpath:config/log4j2.yml
 
 
 
