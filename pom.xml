@@ -216,18 +216,6 @@
 
     <build>
         <finalName>shiro</finalName>
-        <!-- resources 属性影响yaml文件属性的注入 -->
-        <!-- <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources> -->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
