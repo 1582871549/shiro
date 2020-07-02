@@ -40,7 +40,7 @@ public class Role extends Model<Role> {
     /**
      * 角色描述
      */
-    private String comment;
+    private String description;
     /**
      * 创建时间
      */
@@ -50,10 +50,10 @@ public class Role extends Model<Role> {
      */
     private String modifiedTime;
     /**
-     * 是否锁定(0:false 1:true)
+     * 是否可用(0:false 1:true)
      */
-    @TableField("is_locked")
-    private Boolean locked;
+    @TableField("is_activation")
+    private Boolean activation = Boolean.FALSE;
 
     @Override
     protected Serializable pkVal() {

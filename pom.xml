@@ -47,6 +47,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
+
         <!-- 加上这个才能辨认到log4j2.yml文件 -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -153,18 +154,11 @@
             <version>3.2.0</version>
         </dependency>
 
-        <!-- mybatis-spring -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
-        </dependency>
-
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.13</version>
+            <version>8.0.16</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -181,7 +175,7 @@
             </exclusions>
         </dependency>
 
-        <!--druid-->
+        <!-- druid -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>

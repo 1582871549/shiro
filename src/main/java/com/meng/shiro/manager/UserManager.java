@@ -1,13 +1,14 @@
-package com.meng.shiro.service;
+package com.meng.shiro.manager;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.entity.dto.UserDTO;
 
+import java.util.List;
 import java.util.Set;
 
-public interface UserService {
+public interface UserManager {
 
     /**
      * 添加用户-角色之间关系
@@ -24,13 +25,6 @@ public interface UserService {
      * @param roleIds 角色ids
      */
     void removeCorrelationRoles(Long userId, Long... roleIds);
-
-    /**
-     * 用户登录判断
-     *
-     * @param userDTO 用户信息
-     */
-    void login(UserDTO userDTO);
 
     /**
      * 获取用户对应的角色集合
@@ -59,9 +53,10 @@ public interface UserService {
     /**
      * 查询用户集合
      *
-     * @param page 分页对象
      * @return 用户集合
      */
+    List<UserDTO> listUsers();
+
     IPage<UserDTO> listUsers(Page<UserDTO> page);
 
     /**
@@ -95,4 +90,11 @@ public interface UserService {
      * @return 逻辑值
      */
     boolean deleteUser(Long userId);
+
+    /**
+     * 获取用户锁定状态
+     * @param username 用户名
+     * @return 是否锁定
+     */
+    boolean getUserLocked(String username);
 }

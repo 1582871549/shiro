@@ -28,9 +28,13 @@ public class RoleDTO extends BaseDTO implements RoleDTOConvert {
     /**
      * 角色描述
      */
-    private String comment;
+    private String description;
     /**
      * 资源集合
      */
-    private List<ResourceDTO> resources;
+    private List<PermissionDTO> permissions;
+    /**
+     * 是否可用(0:false 1:true)
+     */
+    private Boolean activation = Boolean.FALSE;
 }

@@ -1,21 +1,9 @@
-/**
- * FileName: DTOConvert
- * Author:   大橙子
- * Date:     2019/10/8 16:12
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.shiro.entity;
 
 import com.meng.shiro.entity.dto.UserDTO;
 import com.meng.shiro.entity.po.User;
 
 /**
- * 〈一句话功能简述〉<br> 
- * 〈〉
- *
  * @author 大橙子
  * @create 2019/10/8
  * @since 1.0.0

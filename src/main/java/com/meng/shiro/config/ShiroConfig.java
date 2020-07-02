@@ -1,12 +1,3 @@
-/**
- * FileName: ShiroConfig
- * Author:   大橙子
- * Date:     2019/3/25 22:03
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.shiro.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
@@ -24,19 +15,15 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 
-import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @TODO 多个realm配置  在securityManager中   以及多realm的认证策略
- *
  * @author 大橙子
  * @date 2019/3/25
  * @since 1.0.0
@@ -69,10 +56,10 @@ public class ShiroConfig {
          *
          * 如果自定义filter导入异常, 直接new放入即可
          */
-        Map<String, Filter> a = bean.getFilters();
-        // filterMap.put("custom", customFilter);
-        // filterMap.put("kaptcha", kaptchaFilter);
-        // bean.setFilters(filterMap);
+        // Map<String, Filter> filtersMap = bean.getFilters();
+        // filtersMap.put("custom", customFilter);
+        // filtersMap.put("kaptcha", kaptchaFilter);
+        // bean.setFilters(filtersMap);
 
         /*
          * 配置自定义拦截器
@@ -80,16 +67,16 @@ public class ShiroConfig {
          * authc:所有url都必须认证通过才可以访问
          * anon:所有url都都可以匿名访问
          */
-        Map<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/", "authc");
-        filterMap.put("/index", "user");
-        filterMap.put("/logout", "logout");
+        Map<String, String> interceptsMap = new LinkedHashMap<>();
+        interceptsMap.put("/", "authc");
+        interceptsMap.put("/index", "user");
+        interceptsMap.put("/logout", "logout");
         // map.put("/**", "anon");
-        filterMap.put("/user/**", "authc");
-        filterMap.put("/static/**", "anon");
-        filterMap.put("/css/**", "anon");
-        filterMap.put("/js/**", "anon");
-        filterMap.put("/img/**", "anon");
+        interceptsMap.put("/user/**", "authc");
+        interceptsMap.put("/static/**", "anon");
+        interceptsMap.put("/css/**", "anon");
+        interceptsMap.put("/js/**", "anon");
+        interceptsMap.put("/img/**", "anon");
 
         /*
          * 配置用户登陆页面
@@ -99,7 +86,7 @@ public class ShiroConfig {
         bean.setLoginUrl("/login");
         bean.setSuccessUrl("/index");
         bean.setUnauthorizedUrl("/error/403_error.html");
-        bean.setFilterChainDefinitionMap(filterMap);
+        bean.setFilterChainDefinitionMap(interceptsMap);
         return bean;
     }
 
@@ -203,7 +190,7 @@ public class ShiroConfig {
      * @param scheduler session校验程序
      * @return sessionManager
      */
-    @Bean(name = "defaultWebSessionManager")
+    @Bean(name = "sessionManager")
     public DefaultWebSessionManager defaultWebSessionManager(ExecutorServiceSessionValidationScheduler scheduler) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setGlobalSessionTimeout(18000000);

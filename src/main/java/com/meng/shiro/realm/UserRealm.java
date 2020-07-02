@@ -1,17 +1,9 @@
-/**
- * FileName: UserRealm
- * Author:   大橙子
- * Date:     2019/3/25 22:18
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.shiro.realm;
 
-import com.meng.shiro.entity.dto.ResourceDTO;
+import com.meng.shiro.entity.dto.PermissionDTO;
 import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.entity.dto.UserDTO;
+import com.meng.shiro.permission.BitAndWildPermissionResolver;
 import com.meng.shiro.service.UserService;
 import com.meng.shiro.util.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -35,6 +28,12 @@ public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+
+    @Override
+    public void setPermissionResolver(PermissionResolver permissionResolver) {
+        if (permissionResolver == null) throw new IllegalArgumentException("Null PermissionResolver is not allowed");
+        super.setPermissionResolver(new BitAndWildPermissionResolver());
+    }
 
     /**
      * 此方法调用hasRole,hasPermission的时候才会进行回调.
@@ -60,27 +59,27 @@ public class UserRealm extends AuthorizingRealm {
          * 缓存过期之后会再次执行。
          */
         log.info("into doGetAuthorizationInfo method ... ");
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
         String username = ShiroUtil.getPrincipal();
 
         if ("null".equals(username)) {
-            return authorizationInfo;
+            return info;
         }
 
         UserDTO userDTO = userService.getUser(username);
 
         if (userDTO == null) {
-            return authorizationInfo;
+            return info;
         }
 
         for (RoleDTO roleDTO : userDTO.getRoles()) {
-            authorizationInfo.addRole(roleDTO.getRoleName());
-            for (ResourceDTO resourceDTO : roleDTO.getResources()) {
-                authorizationInfo.addStringPermission(resourceDTO.getResourceName());
+            info.addRole(roleDTO.getRoleName());
+            for (PermissionDTO permissionDTO : roleDTO.getPermissions()) {
+                info.addStringPermission(permissionDTO.getPermissionName());
             }
         }
-        return authorizationInfo;
+        return info;
     }
 
     /**
@@ -110,13 +109,16 @@ public class UserRealm extends AuthorizingRealm {
         UserDTO userDTO = userService.getUser(username);
 
         if (userDTO == null) {
-            throw new UnknownAccountException();
+            throw new UnknownAccountException("账号不存在");
         }
+
         if (userDTO.getLocked()) {
-            throw new LockedAccountException();
+            throw new LockedAccountException("账号已锁定");
         }
 
         ShiroUtil.setSessionAttribute("user", userDTO);
+
+        // org.apache.shiro.authc.credential.DefaultPasswordService
 
         return new SimpleAuthenticationInfo(
                 username,

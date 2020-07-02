@@ -1,20 +1,11 @@
-/**
- * FileName: UserServiceImpl
- * Author:   大橙子
- * Date:     2019/8/8 10:21
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.shiro.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.entity.dto.UserDTO;
-import com.meng.shiro.entity.po.User;
 import com.meng.shiro.exception.BusinessException;
-import com.meng.shiro.mapper.UserMapper;
-import com.meng.shiro.util.ResultUtil;
+import com.meng.shiro.manager.UserManager;
 import com.meng.shiro.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -26,31 +17,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
- * 〈一句话功能简述〉<br> 
- * 〈〉
- *
  * @author 大橙子
  * @create 2019/8/8
  * @since 1.0.0
  */
-
 @Transactional(transactionManager = "dataSourceTransactionManager", rollbackFor = Exception.class)
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
+    private final UserManager userManager;
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public UserServiceImpl(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    @Override
+    public void addCorrelationRoles(Long userId, Long... roleIds) {
+        userManager.addCorrelationRoles(userId, roleIds);
+    }
+
+    @Override
+    public void removeCorrelationRoles(Long userId, Long... roleIds) {
+        userManager.removeCorrelationRoles(userId, roleIds);
     }
 
     @Override
     public void login(UserDTO userDTO) {
+
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
 
@@ -63,70 +60,67 @@ public class UserServiceImpl implements UserService {
         }
 
         // 检查用户状态
-        if (userMapper.getUserLocked(username)) {
+        if (userManager.getUserLocked(username)) {
             throw new BusinessException("该用户已锁定");
         }
 
-        // 1、获取Subject实例对象
         Subject currentUser = SecurityUtils.getSubject();
 
-        // 2、判断当前用户是否登录
-        if (!currentUser.isAuthenticated()) {
-            // 3、将用户名和密码封装到UsernamePasswordToken
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        if (currentUser.isAuthenticated()) {
+            return;
+        }
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
-            // 4、认证
-            try {
-                currentUser.login(token);// 传到MyAuthorizingRealm类中的方法进行认证
-                Session session = currentUser.getSession();
-                session.setAttribute("username", username);
-            } catch (AuthenticationException e) {
-                throw new BusinessException("密码或用户名错误");
-            }
+        try {
+            currentUser.login(token);
+
+            Session session = currentUser.getSession();
+
+            session.setAttribute("username", username);
+
+        } catch (AuthenticationException e) {
+            throw new BusinessException("密码或用户名错误");
         }
     }
 
     @Override
-    public UserDTO getUser(Long id) {
-        return new UserDTO().doBackward(userMapper.selectById(id));
+    public Set<RoleDTO> getRoles(String username) {
+        return userManager.getRoles(username);
+    }
+
+    @Override
+    public UserDTO getUser(Long userId) {
+        return userManager.getUser(userId);
     }
 
     @Override
     public UserDTO getUser(String username) {
-        return new UserDTO().doBackward(userMapper.selectOne(new QueryWrapper<User>().eq("username", username)));
+        return userManager.getUser(username);
     }
 
     @Override
-    public List<UserDTO> listUsers() {
-        List<UserDTO> userDTOS = new ArrayList<>(200);
-        for (User user : userMapper.selectList(null)) {
-            userDTOS.add(new UserDTO().doBackward(user));
-        }
-        return userDTOS;
+    public IPage<UserDTO> listUsers(Page<UserDTO> page) {
+        return userManager.listUsers(page);
     }
 
     @Override
     public boolean saveUser(UserDTO userDTO) {
-        return ResultUtil.returnBool(userMapper.insert(userDTO.doForward(userDTO)));
+        return userManager.saveUser(userDTO);
     }
 
     @Override
     public boolean saveOrUpdateUser(UserDTO userDTO) {
-        if (userDTO == null) {
-            return false;
-        }
-        Long userId = userDTO.getUserId();
-        return userId == null || getUser(userId) == null ? saveUser(userDTO) : updateUser(userDTO);
+        return userManager.saveOrUpdateUser(userDTO);
     }
 
     @Override
     public boolean updateUser(UserDTO userDTO) {
-        return ResultUtil.returnBool(userMapper.updateById(userDTO.doForward(userDTO)));
+        return userManager.updateUser(userDTO);
     }
 
     @Override
-    public boolean deleteUser(Long id) {
-        return ResultUtil.returnBool(userMapper.deleteById(id));
+    public boolean deleteUser(Long userId) {
+        return userManager.deleteUser(userId);
     }
 
 

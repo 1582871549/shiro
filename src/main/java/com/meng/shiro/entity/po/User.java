@@ -68,7 +68,7 @@ public class User extends Model<User> {
      * 是否锁定(0:false 1:true)
      */
     @TableField("is_locked")
-    private Boolean locked;
+    private Boolean locked = Boolean.FALSE;
 
     @Override
     protected Serializable pkVal() {

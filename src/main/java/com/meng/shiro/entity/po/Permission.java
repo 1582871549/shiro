@@ -16,23 +16,23 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@TableName("sys_resource")
-public class Resource extends Model<Resource> {
+@TableName("sys_permission")
+public class Permission extends Model<Permission> {
 
     private static final long serialVersionUID = -3734186975559806202L;
     /**
      * 主键
      */
-    @TableId(value = "resource_id")
-    private Long resourceId;
+    @TableId(value = "permission_id")
+    private Long permissionId;
     /**
      * 资源名称
      */
-    private String resourceName;
+    private String permissionName;
     /**
      * 描述
      */
-    private String comment;
+    private String description;
     /**
      * 类型
      */
@@ -66,13 +66,13 @@ public class Resource extends Model<Resource> {
      */
     private String modifiedTime;
     /**
-     * 是否锁定
+     * 是否可用(0:false 1:true)
      */
-    @TableField("is_locked")
-    private Boolean locked;
+    @TableField("is_activation")
+    private Boolean activation = Boolean.FALSE;
 
     @Override
     protected Serializable pkVal() {
-        return this.resourceId;
+        return this.permissionId;
     }
 }

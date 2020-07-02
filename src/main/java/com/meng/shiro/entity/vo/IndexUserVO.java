@@ -47,4 +47,8 @@ public class IndexUserVO extends BaseVO {
      * 最后登陆时间
      */
     private String lastTime;
+    /**
+     * 是否锁定(0:false 1:true)
+     */
+    private Boolean locked = Boolean.FALSE;
 }

@@ -1,19 +1,10 @@
-/**
- * FileName: RoleManagerImpl
- * Author:   大橙子
- * Date:     2019/8/12 16:12
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.shiro.manager.impl;
 
 import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.entity.po.Role;
 import com.meng.shiro.manager.RoleManager;
-import com.meng.shiro.mapper.ResourceMapper;
-import com.meng.shiro.mapper.RoleMapper;
+import com.meng.shiro.repository.PermissionMapper;
+import com.meng.shiro.repository.RoleMapper;
 import com.meng.shiro.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,30 +13,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 〈一句话功能简述〉<br> 
- * 〈〉
- *
  * @author 大橙子
  * @create 2019/8/12
  * @since 1.0.0
  */
-
-@Component("roleManagerImpl")
+@Component
 public class RoleManagerImpl implements RoleManager {
 
     private final RoleMapper roleMapper;
-
-    private final ResourceMapper resourceMapper;
+    private final PermissionMapper permissionMapper;
 
     @Autowired
-    public RoleManagerImpl(RoleMapper roleMapper, ResourceMapper resourceMapper) {
+    public RoleManagerImpl(RoleMapper roleMapper, PermissionMapper permissionMapper) {
         this.roleMapper = roleMapper;
-        this.resourceMapper = resourceMapper;
+        this.permissionMapper = permissionMapper;
     }
 
     @Override
-    public RoleDTO getRole(Long id) {
-        return new RoleDTO().doBackward(roleMapper.selectById(id));
+    public void addCorrelationPermissions(Long roleId, Long... permissionIds) {
+
+    }
+
+    @Override
+    public void removeCorrelationPermissions(Long roleId, Long... permissionIds) {
+
+    }
+
+    @Override
+    public RoleDTO getRole(Long roleId) {
+        return new RoleDTO().doBackward(roleMapper.selectById(roleId));
     }
 
     @Override
@@ -77,7 +73,7 @@ public class RoleManagerImpl implements RoleManager {
     }
 
     @Override
-    public boolean deleteRole(Long id) {
-        return ResultUtil.returnBool(roleMapper.deleteById(id));
+    public boolean deleteRole(Long roleId) {
+        return ResultUtil.returnBool(roleMapper.deleteById(roleId));
     }
 }

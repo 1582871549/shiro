@@ -9,7 +9,7 @@
  */
 package com.meng.shiro.manager;
 
-import com.meng.shiro.entity.dto.ResourceDTO;
+import com.meng.shiro.entity.dto.PermissionDTO;
 
 import java.util.List;
 
@@ -21,52 +21,52 @@ import java.util.List;
  * @create 2019/8/12
  * @since 1.0.0
  */
-public interface ResourceManager {
+public interface PermissionManager {
 
     /**
      * 查询单个资源
      *
-     * @param id 主键
+     * @param permissionId 主键
      * @return 资源
      */
-    ResourceDTO getResource(Long id);
+    PermissionDTO getPermission(Long permissionId);
 
     /**
      * 查询资源集合
      *
      * @return 资源集合
      */
-    List<ResourceDTO> listResources();
+    List<PermissionDTO> listPermissions();
 
     /**
      * 插入一条记录
      *
-     * @param resourceDTO 实体对象
+     * @param permissionDTO 实体对象
      * @return 逻辑值
      */
-    boolean saveResource(ResourceDTO resourceDTO);
+    boolean savePermission(PermissionDTO permissionDTO);
 
     /**
      * 主键存在则更新记录，否则插入一条记录
      *
-     * @param resourceDTO 实体对象
+     * @param permissionDTO 实体对象
      * @return 逻辑值
      */
-    boolean saveOrUpdateResource(ResourceDTO resourceDTO);
+    boolean saveOrUpdatePermission(PermissionDTO permissionDTO);
 
     /**
      * 修改一条记录
      *
-     * @param resourceDTO 实体对象
+     * @param permissionDTO 实体对象
      * @return 逻辑值
      */
-    boolean updateResource(ResourceDTO resourceDTO);
+    boolean updatePermission(PermissionDTO permissionDTO);
 
     /**
      * 删除一条记录
      *
-     * @param id 主键
+     * @param permissionId 主键
      * @return 逻辑值
      */
-    boolean deleteResource(Long id);
+    boolean deletePermission(Long permissionId);
 }

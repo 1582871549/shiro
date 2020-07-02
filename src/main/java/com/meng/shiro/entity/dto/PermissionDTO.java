@@ -1,7 +1,7 @@
 package com.meng.shiro.entity.dto;
 
 import com.meng.shiro.base.BaseDTO;
-import com.meng.shiro.entity.ResourceDTOConvert;
+import com.meng.shiro.entity.PermissionDTOConvert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -12,21 +12,21 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ResourceDTO extends BaseDTO implements ResourceDTOConvert {
+public class PermissionDTO extends BaseDTO implements PermissionDTOConvert {
 
     private static final long serialVersionUID = 7225989106023399374L;
     /**
      * 资源id
      */
-    private Long resourceId;
+    private Long permissionId;
     /**
      * 资源名称
      */
-    private String resourceName;
+    private String permissionName;
     /**
      * 描述
      */
-    private String comment;
+    private String description;
     /**
      * 类型
      */
@@ -51,4 +51,8 @@ public class ResourceDTO extends BaseDTO implements ResourceDTOConvert {
      * 图标
      */
     private String icon;
+    /**
+     * 是否可用(0:false 1:true)
+     */
+    private Boolean activation = Boolean.FALSE;
 }

@@ -55,5 +55,8 @@ public class UserDTO extends BaseDTO implements UserDTOConvert {
      * 角色集合
      */
     private List<RoleDTO> roles;
-
+    /**
+     * 是否锁定(0:false 1:true)
+     */
+    private Boolean locked = Boolean.FALSE;
 }

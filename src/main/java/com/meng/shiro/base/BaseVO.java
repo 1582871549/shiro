@@ -33,9 +33,5 @@ public abstract class BaseVO implements Serializable {
     /**
      * 修改时间
      */
-    private String updateTime;
-    /**
-     * 是否锁定(0:false 1:true)
-     */
-    private Boolean locked;
+    private String modifiedTime;
 }

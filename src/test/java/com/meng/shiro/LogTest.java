@@ -1,6 +1,9 @@
 package com.meng.shiro;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.shiro.entity.dto.UserDTO;
+import com.meng.shiro.entity.po.User;
 import com.meng.shiro.service.UserService;
 import com.meng.shiro.util.LogUtils;
 import org.junit.Test;
@@ -30,9 +33,9 @@ public class LogTest {
         Logger log1 = LogUtils.getBussinessLogger();
         Logger log2 = LogUtils.getDBLogger();
 
-        List<UserDTO> dtos = userService.listUsers();
+        IPage<UserDTO> iPage = userService.listUsers(new Page<UserDTO>(1, 10));
 
-        System.out.println(dtos);
+        System.out.println(iPage);
 
         log.error("getExceptionLogger   日志测试");
         log1.info("getBussinessLogger   日志测试");
