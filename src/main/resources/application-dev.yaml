@@ -21,12 +21,8 @@ spring:
     cache: false
 
 mybatis-plus:
-  type-aliases-package: com.meng.shiro.bean
+  type-aliases-package: com.meng.user.repository.entity
   mapper-locations: classpath:mapper/*Mapper.xml
-
-
-my:
-  name: qweqweqwe
 
 logging:
   config: classpath:config/log4j2.yml
