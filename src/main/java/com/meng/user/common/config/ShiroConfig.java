@@ -1,8 +1,13 @@
 package com.meng.user.common.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.meng.user.shiro.permission.CustomRolePermissionResolver;
 import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authz.ModularRealmAuthorizer;
+import org.apache.shiro.authz.permission.PermissionResolver;
+import org.apache.shiro.authz.permission.RolePermissionResolver;
+import org.apache.shiro.authz.permission.WildcardPermissionResolver;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -28,20 +33,20 @@ import java.util.Map;
  * @date 2019/3/25
  * @since 1.0.0
  */
-@Configuration
 @Order(1)
+@Configuration
 public class ShiroConfig {
 
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件问题。
      * 注意：单独一个ShiroFilterFactoryBean配置是会报错的，
      * 因为在初始化ShiroFilterFactoryBean的时候需要注入：SecurityManager
-     *
+     * <p>
      * Filter Chain定义说明
      * 1、一个URL可以配置多个Filter，使用逗号分隔
      * 2、当设置多个过滤器时，全部验证通过，才视为通过
      * 3、部分过滤器可指定参数，如perms，roles
-     *
+     * <p>
      * hiroFilterFactoryBean，是个factorybean，为了生成ShiroFilter。
      * 它主要保持了三项数据，securityManager，filters，filterChainDefinitionManager。
      */
@@ -68,15 +73,13 @@ public class ShiroConfig {
          * anon:所有url都都可以匿名访问
          */
         Map<String, String> interceptsMap = new LinkedHashMap<>();
-        interceptsMap.put("/", "authc");
+
         interceptsMap.put("/index", "user");
         interceptsMap.put("/logout", "logout");
         // map.put("/**", "anon");
         interceptsMap.put("/user/**", "authc");
         interceptsMap.put("/static/**", "anon");
-        interceptsMap.put("/css/**", "anon");
-        interceptsMap.put("/js/**", "anon");
-        interceptsMap.put("/img/**", "anon");
+        interceptsMap.put("/**", "authc");
 
         /*
          * 配置用户登陆页面
@@ -85,7 +88,8 @@ public class ShiroConfig {
          */
         bean.setLoginUrl("/login");
         bean.setSuccessUrl("/index");
-        bean.setUnauthorizedUrl("/error/403_error.html");
+        // bean.setUnauthorizedUrl("/error/403_error.html");
+        bean.setUnauthorizedUrl("/403");
         bean.setFilterChainDefinitionMap(interceptsMap);
         return bean;
     }
@@ -93,18 +97,20 @@ public class ShiroConfig {
     /**
      * 权限管理，这个类组合了登陆，登出，权限，session的处理，是个比较重要的类。
      *
-     * @param userRealm 自定义用户域
+     * @param userRealm      自定义用户域
      * @param ehCacheManager 缓存管理器
      * @return securityManager
      */
     @Bean(name = "securityManager")
     public SecurityManager securityManager(UserRealm userRealm,
                                            EhCacheManager ehCacheManager,
-                                           RememberMeManager rememberMeManager) {
+                                           RememberMeManager rememberMeManager,
+                                           ModularRealmAuthorizer modularRealmAuthorizer) {
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userRealm);
         securityManager.setCacheManager(ehCacheManager);
+        securityManager.setAuthorizer(modularRealmAuthorizer);
         securityManager.setRememberMeManager(rememberMeManager);
         return securityManager;
     }
@@ -121,11 +127,12 @@ public class ShiroConfig {
 
     /**
      * 用户认证类
+     *
      * @return userRealm
      */
     @Bean(name = "userRealm")
     @DependsOn("lifecycleBeanPostProcessor")
-    public UserRealm userRealm(HashedCredentialsMatcher hashedCredentialsMatcher){
+    public UserRealm userRealm(HashedCredentialsMatcher hashedCredentialsMatcher) {
         UserRealm userRealm = new UserRealm();
         userRealm.setCredentialsMatcher(hashedCredentialsMatcher);
         return userRealm;
@@ -140,15 +147,60 @@ public class ShiroConfig {
     @Bean(name = "hashedCredentialsMatcher")
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("MD5");
+        hashedCredentialsMatcher.setHashAlgorithmName("SHA-256");
         hashedCredentialsMatcher.setHashIterations(2);
         hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
         return hashedCredentialsMatcher;
     }
 
     /**
+     * 权限 解析器
+     *
+     * 根据权限操作符, 创建不同的权限实例
+     *
+     * @return 权限 解析器
+     */
+    @Bean(name = "modularRealmAuthorizer")
+    public ModularRealmAuthorizer modularRealmAuthorizer(PermissionResolver permissionResolver,
+                                                         CustomRolePermissionResolver customRolePermissionResolver) {
+        ModularRealmAuthorizer authorizer = new ModularRealmAuthorizer();
+        authorizer.setPermissionResolver(permissionResolver);
+        authorizer.setRolePermissionResolver(customRolePermissionResolver);
+        return authorizer;
+    }
+
+    /**
+     * 权限 解析器
+     *
+     * 根据权限操作符, 创建不同的权限实例
+     *
+     * @return 权限 解析器
+     */
+    @Bean(name = "permissionResolver")
+    public PermissionResolver permissionResolver() {
+        // 位权限操作符
+        // return new BitPermissionResolver();
+        return new WildcardPermissionResolver();
+    }
+
+    /**
+     * 角色-权限 解析器
+     *
+     * 根据角色名称获取对应的权限列表, 对相应的权限进行缓存管理
+     *
+     * @return 角色-权限 解析器
+     */
+    @Bean(name = "customRolePermissionResolver")
+    public CustomRolePermissionResolver customRolePermissionResolver(PermissionResolver permissionResolver) {
+        CustomRolePermissionResolver resolver = new CustomRolePermissionResolver();
+        resolver.setPermissionResolver(permissionResolver);
+        return resolver;
+    }
+
+    /**
      * EhCacheManager，缓存管理，用户登陆成功后，把用户信息和权限信息缓存起来，
      * 然后每次用户请求时，放入用户的session中，如果不设置这个bean，每个请求都会查询一次数据库。
+     *
      * @return ehCacheManager
      */
     @Bean(name = "ehCacheManager")
@@ -174,6 +226,7 @@ public class ShiroConfig {
     /**
      * rememberMe 是cookie的名称，对应前端的checkbox的name = rememberMe
      * 记住我cookie生效时间30天 ,单位秒
+     *
      * @return rememberMeCookie
      */
     @Bean(name = "rememberMeCookie")

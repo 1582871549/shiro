@@ -1,29 +1,31 @@
 package com.meng.user.repository.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
  * @author 大橙子
  */
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @TableName("sys_permission")
-public class Permission extends Model<Permission> {
+public class PermissionDO extends Model<PermissionDO> {
 
-    private static final long serialVersionUID = -3734186975559806202L;
     /**
-     * 主键
+     * 资源id
      */
-    @TableId(value = "permission_id")
+    @TableId(value = "permission_id", type = IdType.AUTO)
     private Long permissionId;
     /**
      * 资源名称
@@ -34,9 +36,9 @@ public class Permission extends Model<Permission> {
      */
     private String description;
     /**
-     * 类型
+     * 父元素id
      */
-    private Integer type;
+    private Long parentId;
     /**
      * url
      */
@@ -46,9 +48,9 @@ public class Permission extends Model<Permission> {
      */
     private String operation;
     /**
-     * 父元素id
+     * 类型（0：菜单，1：按钮）
      */
-    private Long parentId;
+    private Integer type;
     /**
      * 排序
      */
@@ -58,6 +60,11 @@ public class Permission extends Model<Permission> {
      */
     private String icon;
     /**
+     * 是否可用(0:false 1:true)
+     */
+    @TableField("is_activation")
+    private Boolean activation;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -65,11 +72,6 @@ public class Permission extends Model<Permission> {
      * 修改时间
      */
     private String modifiedTime;
-    /**
-     * 是否可用(0:false 1:true)
-     */
-    @TableField("is_activation")
-    private Boolean activation = Boolean.FALSE;
 
     @Override
     protected Serializable pkVal() {

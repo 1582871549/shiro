@@ -1,16 +1,22 @@
 package com.meng.user.service.system.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.meng.user.common.util.BeanCopyUtil;
 import com.meng.user.common.util.ResultUtil;
-import com.meng.user.repository.entity.Role;
+import com.meng.user.repository.entity.RoleDO;
 import com.meng.user.repository.mapper.RoleMapper;
 import com.meng.user.service.system.entity.dto.RoleDTO;
 import com.meng.user.service.system.RoleService;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author 大橙子
@@ -37,17 +43,53 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO getRole(Long roleId) {
 
-        Role role = roleMapper.selectById(roleId);
+        RoleDO roleDO = roleMapper.selectById(roleId);
 
         return null;
+    }
+
+    /**
+     * 查询单个角色
+     *
+     * @param roleName 角色名称
+     * @return 角色
+     */
+    @Override
+    public RoleDTO getRole(String roleName) {
+        RoleDO roleDO = roleMapper.selectOne(new QueryWrapper<RoleDO>().eq("roleName", roleName));
+        return BeanCopyUtil.copy(roleDO, RoleDTO.class);
     }
 
     @Override
     public List<RoleDTO> listRoles() {
 
-        List<Role> roles = roleMapper.selectList(null);
+        List<RoleDO> roleDOS = roleMapper.selectList(null);
 
         return null;
+    }
+
+    @Override
+    public List<RoleDTO> listRoles(Long userId) {
+        List<RoleDO> roleDOS = roleMapper.listRoles(userId);
+        return BeanCopyUtil.copyList(roleDOS, RoleDTO.class);
+    }
+
+    /**
+     * 查询角色集合
+     *
+     * @param userId 用户id
+     * @return 角色集合
+     */
+    @Override
+    public Set<String> listRoleNames(Long userId) {
+
+        List<RoleDO> roleDOS = roleMapper.listRoles(userId);
+
+        List<RoleDO> list = convertNPE(roleDOS);
+
+        return list.stream()
+                .map(RoleDO::getRoleName)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -73,5 +115,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean deleteRole(Long roleId) {
         return ResultUtil.returnBool(roleMapper.deleteById(null));
+    }
+
+    private <T> List<T> convertNPE(List<T> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 }

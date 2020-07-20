@@ -1,15 +1,20 @@
 package com.meng.user.web.controller;
 
+import com.meng.user.common.exception.BusinessException;
 import com.meng.user.web.entity.BaseController;
 import com.meng.user.service.system.UserService;
+import com.meng.user.web.entity.request.UserReq;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,15 +24,14 @@ import java.util.Map;
 
 /**
  * <p>
- *     登陆接口
+ * 登陆接口
  * </p>
  *
  * @author 大橙子
  * @date 2019/3/25
- * @since 1.0.0
- *
  * @RequiresPermissions(value={"permission:view","permission:aix"}, logical= Logical.AND) 同时具有
  * @RequiresPermissions(value={"permission:view","permission:aix"}, logical= Logical.OR)  一个就行
+ * @since 1.0.0
  */
 @Controller
 @Slf4j
@@ -38,8 +42,8 @@ public class LoginController extends BaseController {
 
     /**
      * 跳转登陆页
-     *      已通过验证的用户跳转主页(不包含 记住我 的用户)
-     *      未通过验证的用户重定向到登陆页
+     * 已通过验证的用户跳转主页(不包含 记住我 的用户)
+     * 未通过验证的用户重定向到登陆页
      *
      * @return path
      */
@@ -56,7 +60,7 @@ public class LoginController extends BaseController {
     // success(ReturnCodeEnum.SUCCESS.getCode(), "");
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(HttpServletRequest request, Map<String, Object> map){
+    public String login(HttpServletRequest request, Map<String, Object> map) {
 
         log.info("into the login method ...");
         // 登录失败从request中获取shiro处理的异常信息。shiroLoginFailure:就是shiro异常类的全类名.
@@ -79,6 +83,30 @@ public class LoginController extends BaseController {
         return "index";
     }
 
+    @RequestMapping(value = "/login2", method = RequestMethod.POST)
+    public String login2(@RequestBody UserReq userReq) {
+
+        if (userReq == null) {
+            return null;
+        }
+
+        String username = userReq.getUsername();
+        String password = userReq.getPassword();
+
+        // 检查空值
+        if (StringUtils.isBlank(username)) {
+            throw new BusinessException("username can't be empty");
+        }
+        if (StringUtils.isBlank(password)) {
+            throw new BusinessException("password can't be empty");
+        }
+
+        userService.login(userReq);
+
+        //如果已经登录，直接跳转主页面
+        return "index";
+    }
+
     @RequestMapping(value = "/logOut", method = RequestMethod.GET)
     public String logOut(HttpSession session) {
         Subject subject = SecurityUtils.getSubject();
@@ -89,10 +117,12 @@ public class LoginController extends BaseController {
 
     /**
      * 主页
+     *
      * @param session
      * @param model
      * @return
      */
+    @RequiresPermissions("user:list")
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
     public String index(HttpSession session, Model model) {
 

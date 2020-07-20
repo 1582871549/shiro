@@ -22,6 +22,15 @@ public interface PermissionService {
     List<PermissionDTO> listPermissions();
 
     /**
+     * 查询资源集合
+     *
+     * @param roleId 角色id
+     *
+     * @return 资源集合
+     */
+    List<PermissionDTO> listPermissions(Long roleId);
+
+    /**
      * 插入一条记录
      *
      * @param permissionDTO 实体对象

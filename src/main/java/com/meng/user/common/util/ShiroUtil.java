@@ -244,7 +244,7 @@ public class ShiroUtil {
      *
      * @return 当前用户信息
      */
-    public static String getPrincipal() {
+    public static String getPrimaryPrincipal() {
         Subject subject = getSubject();
         if (subject != null) {
             return String.valueOf(subject.getPrincipal());

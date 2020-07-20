@@ -9,7 +9,6 @@ import java.io.Serializable;
  * @create 2019/3/25
  * @since 1.0.0
  */
-
 @Data
 public abstract class BaseDTO implements Serializable {
 

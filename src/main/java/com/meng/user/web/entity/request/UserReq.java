@@ -1,22 +1,14 @@
-package com.meng.user.service.system.entity.dto;
+package com.meng.user.web.entity.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class UserDTO extends BaseDTO {
+public class UserReq {
 
-    /**
-     * 用户id
-     */
-    private Long userId;
     /**
      * 用户名
      */

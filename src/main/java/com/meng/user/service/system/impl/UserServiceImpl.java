@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.user.common.exception.BusinessException;
+import com.meng.user.common.util.BeanCopyUtil;
 import com.meng.user.common.util.ResultUtil;
-import com.meng.user.repository.entity.User;
+import com.meng.user.repository.entity.UserDO;
 import com.meng.user.repository.mapper.UserMapper;
 import com.meng.user.service.system.UserService;
 import com.meng.user.service.system.entity.dto.UserDTO;
+import com.meng.user.web.entity.request.UserReq;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -43,18 +45,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(UserDTO userDTO) {
+    public void login(UserReq userReq) {
 
-        String username = userDTO.getUsername();
-        String password = userDTO.getPassword();
-
-        // 检查空值
-        if (StringUtils.isBlank(username)) {
-            throw new BusinessException("username can't be empty");
-        }
-        if (StringUtils.isBlank(password)) {
-            throw new BusinessException("password can't be empty");
-        }
+        String username = userReq.getUsername();
+        String password = userReq.getPassword();
 
         // 检查用户状态
         if (userMapper.getUserLocked(username)) {
@@ -70,43 +64,36 @@ public class UserServiceImpl implements UserService {
 
         try {
             currentUser.login(token);
-
-            Session session = currentUser.getSession();
-
-            session.setAttribute("username", username);
-
         } catch (AuthenticationException e) {
             throw new BusinessException("密码或用户名错误");
         }
+
+        Session session = currentUser.getSession();
+
+        session.setAttribute("username", username);
     }
 
     @Override
     public UserDTO getUser(Long userId) {
-        User user = userMapper.selectById(userId);
-        return null;
+        UserDO userDO = userMapper.selectById(userId);
+        return BeanCopyUtil.copy(userDO, UserDTO.class);
     }
 
     @Override
     public UserDTO getUser(String username) {
-
-        User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
-
-        return null;
+        UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().eq("username", username));
+        return BeanCopyUtil.copy(userDO, UserDTO.class);
     }
 
     @Override
-    public IPage<UserDTO> listUsers(Page<UserDTO> page) {
-
-        Page<User> userPage = new Page<>();
-
-        IPage<User> userIPage = userMapper.selectPage(userPage, null);
-
-        return null;
+    public IPage<UserDO> listUsers(Page<UserDO> page) {
+        return userMapper.selectPage(page, null);
     }
 
     @Override
     public boolean saveUser(UserDTO userDTO) {
-        return ResultUtil.returnBool(userMapper.insert(null));
+        UserDO userDO = BeanCopyUtil.copy(userDTO, UserDO.class);
+        return ResultUtil.returnBool(userMapper.insert(userDO));
     }
 
     @Override
@@ -120,7 +107,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUser(UserDTO userDTO) {
-        return ResultUtil.returnBool(userMapper.updateById(null));
+        UserDO userDO = BeanCopyUtil.copy(userDTO, UserDO.class);
+        return ResultUtil.returnBool(userMapper.updateById(userDO));
     }
 
     @Override

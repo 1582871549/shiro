@@ -1,14 +1,40 @@
 package com.meng.user.repository.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @Data
-public class RolePermssion implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName(value = "sys_role_permission")
+public class RolePermssionDO extends Model<RolePermssionDO> {
 
+    /**
+     * 主键
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+    /**
+     * 角色id
+     */
     private Long roleId;
+    /**
+     * 权限id
+     */
     private Long permissionId;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+    /**
+     * 修改时间
+     */
+    private String modifiedTime;
 
     @Override
     public boolean equals(Object o) {
@@ -21,7 +47,7 @@ public class RolePermssion implements Serializable {
             return true;
         }
 
-        RolePermssion other = (RolePermssion) o;
+        RolePermssionDO other = (RolePermssionDO) o;
 
         if (permissionId != null ? !permissionId.equals(other.permissionId) : other.permissionId != null) {
             return false;

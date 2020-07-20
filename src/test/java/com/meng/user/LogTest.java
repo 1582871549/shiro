@@ -2,7 +2,7 @@ package com.meng.user;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.meng.user.service.system.entity.dto.UserDTO;
+import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.UserService;
 import com.meng.user.common.util.LogUtils;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class LogTest {
         Logger log1 = LogUtils.getBussinessLogger();
         Logger log2 = LogUtils.getDBLogger();
 
-        IPage<UserDTO> iPage = userService.listUsers(new Page<UserDTO>(1, 10));
+        IPage<UserDO> iPage = userService.listUsers(new Page<>(1, 10));
 
         System.out.println(iPage);
 

@@ -1,10 +1,19 @@
 package com.meng.user.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.meng.user.repository.entity.Role;
+import com.meng.user.repository.entity.RoleDO;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface RoleMapper extends BaseMapper<Role> {
+import java.util.List;
 
+@Repository
+public interface RoleMapper extends BaseMapper<RoleDO> {
+
+    /**
+     * 查询角色集合
+     *
+     * @param userId 用户id
+     * @return 角色集合
+     */
+    List<RoleDO> listRoles(Long userId);
 }

@@ -1,13 +1,17 @@
 package com.meng.user.service.system.entity.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
  * @author 大橙子
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class PermissionDTO extends BaseDTO {
@@ -26,9 +30,9 @@ public class PermissionDTO extends BaseDTO {
      */
     private String description;
     /**
-     * 类型
+     * 父元素id
      */
-    private Integer type;
+    private Long parentId;
     /**
      * url
      */
@@ -38,9 +42,9 @@ public class PermissionDTO extends BaseDTO {
      */
     private String operation;
     /**
-     * 父元素id
+     * 类型（0：菜单，1：按钮）
      */
-    private Long parentId;
+    private Integer type;
     /**
      * 排序
      */
@@ -52,5 +56,5 @@ public class PermissionDTO extends BaseDTO {
     /**
      * 是否可用(0:false 1:true)
      */
-    private Boolean activation = Boolean.FALSE;
+    private Boolean activation;
 }

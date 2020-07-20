@@ -1,7 +1,9 @@
 package com.meng.user.service.system.entity.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
  * @author 大橙子
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class RoleDTO extends BaseDTO {
@@ -28,11 +32,7 @@ public class RoleDTO extends BaseDTO {
      */
     private String description;
     /**
-     * 资源集合
-     */
-    private List<PermissionDTO> permissions;
-    /**
      * 是否可用(0:false 1:true)
      */
-    private Boolean activation = Boolean.FALSE;
+    private Boolean activation;
 }

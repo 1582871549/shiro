@@ -1,28 +1,28 @@
 package com.meng.user.repository.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@ToString
-@Accessors(chain = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @TableName("sys_user")
-public class User extends Model<User> {
+public class UserDO extends Model<UserDO> {
 
-    private static final long serialVersionUID = 7838569805393187805L;
     /**
-     * 主键
+     * 用户id
      */
-    @TableId(value = "user_id")
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Long userId;
     /**
      * 用户名
@@ -41,7 +41,7 @@ public class User extends Model<User> {
      */
     private String name;
     /**
-     * 性别(0:女 1:男 2:不详)
+     * （0：不详，1：男，2：女）
      */
     private Integer sex;
     /**
@@ -53,6 +53,20 @@ public class User extends Model<User> {
      */
     private String photo;
     /**
+     * 是否锁定(0:false 1:true)
+     */
+    @TableField("is_locked")
+    private Boolean locked;
+    /**
+     * 是否进行逻辑删除（0：false，1：true）
+     */
+    @TableField("is_deleted")
+    private Boolean deleted;
+    /**
+     * 最后登陆时间
+     */
+    private String lastLoginTime;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -60,15 +74,6 @@ public class User extends Model<User> {
      * 修改时间
      */
     private String modifiedTime;
-    /**
-     * 最后登陆时间
-     */
-    private String lastLoginTime;
-    /**
-     * 是否锁定(0:false 1:true)
-     */
-    @TableField("is_locked")
-    private Boolean locked = Boolean.FALSE;
 
     @Override
     protected Serializable pkVal() {

@@ -3,6 +3,7 @@ package com.meng.user.service.system;
 import com.meng.user.service.system.entity.dto.RoleDTO;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RoleService {
 
@@ -31,11 +32,35 @@ public interface RoleService {
     RoleDTO getRole(Long roleId);
 
     /**
+     * 查询单个角色
+     *
+     * @param roleName 角色名称
+     * @return 角色
+     */
+    RoleDTO getRole(String roleName);
+
+    /**
      * 查询角色集合
      *
      * @return 角色集合
      */
     List<RoleDTO> listRoles();
+
+    /**
+     * 查询角色集合
+     *
+     * @param userId 用户id
+     * @return 角色集合
+     */
+    List<RoleDTO> listRoles(Long userId);
+
+    /**
+     * 查询角色集合
+     *
+     * @param userId 用户id
+     * @return 角色集合
+     */
+    Set<String> listRoleNames(Long userId);
 
     /**
      * 插入一条记录

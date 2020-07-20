@@ -1,9 +1,10 @@
 package com.meng.user.shiro.realm;
 
+import com.meng.user.service.system.PermissionService;
+import com.meng.user.service.system.RoleService;
 import com.meng.user.service.system.entity.dto.PermissionDTO;
 import com.meng.user.service.system.entity.dto.RoleDTO;
 import com.meng.user.service.system.entity.dto.UserDTO;
-import com.meng.user.shiro.permission.BitAndWildPermissionResolver;
 import com.meng.user.service.system.UserService;
 import com.meng.user.common.util.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -28,58 +31,21 @@ public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
-    @Override
-    public void setPermissionResolver(PermissionResolver permissionResolver) {
-        if (permissionResolver == null) throw new IllegalArgumentException("Null PermissionResolver is not allowed");
-        super.setPermissionResolver(new BitAndWildPermissionResolver());
+    /**
+     * 仅支持UsernamePasswordToken类型的Token
+     */
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof UsernamePasswordToken;
     }
 
     /**
-     * 此方法调用hasRole,hasPermission的时候才会进行回调.
-     * <p>
-     * 权限信息.(授权):
-     * 1、如果用户正常退出，缓存自动清空；
-     * 2、如果用户非正常退出，缓存自动清空；
-     * 3、如果我们修改了用户的权限，而用户不退出系统，修改的权限无法立即生效。
-     * （需要手动编程进行实现；放在service进行调用）
-     * 在权限修改后调用realm中的方法，realm已经由spring管理，所以从spring中获取realm实例，调用clearCached方法；
-     * :Authorization 是授权访问控制，用于对用户进行的操作授权，证明该用户是否允许进行当前操作，如访问某个链接，某个资源文件等。
-     *
-     * @param principals 1
-     * @return 1
+     * 自定义名称
      */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-
-        /*
-         * 当没有使用缓存的时候，不断刷新页面的话，这个代码会不断执行，
-         * 当其实没有必要每次都重新设置权限信息，所以我们需要放到缓存中进行管理；
-         * 当放到缓存中时，这样的话，doGetAuthorizationInfo就只会执行一次了，
-         * 缓存过期之后会再次执行。
-         */
-        log.info("into doGetAuthorizationInfo method ... ");
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-
-        String username = ShiroUtil.getPrincipal();
-
-        if ("null".equals(username)) {
-            return info;
-        }
-
-        UserDTO userDTO = userService.getUser(username);
-
-        if (userDTO == null) {
-            return info;
-        }
-
-        for (RoleDTO roleDTO : userDTO.getRoles()) {
-            info.addRole(roleDTO.getRoleName());
-            for (PermissionDTO permissionDTO : roleDTO.getPermissions()) {
-                info.addStringPermission(permissionDTO.getPermissionName());
-            }
-        }
-        return info;
+    public String getName() {
+        return this.getClass().getName();
     }
 
     /**
@@ -91,7 +57,7 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
-        //获取用户的输入的账号.
+        // 获取用户的输入的账号
         String username = String.valueOf(token.getPrincipal());
 
         if (StringUtils.isBlank(username)) {
@@ -124,6 +90,70 @@ public class UserRealm extends AuthorizingRealm {
                 username,
                 userDTO.getPassword(),
                 ByteSource.Util.bytes(username + userDTO.getSalt()),
-                getName());
+                getName()
+        );
     }
+
+    /**
+     * 此方法调用hasRole,hasPermission的时候才会进行回调.
+     * <p>
+     * 权限信息.(授权):
+     * 1、如果用户正常退出，缓存自动清空；
+     * 2、如果用户非正常退出，缓存自动清空；
+     * 3、如果我们修改了用户的权限，而用户不退出系统，修改的权限无法立即生效。
+     * （需要手动编程进行实现；放在service进行调用）
+     * 在权限修改后调用realm中的方法，realm已经由spring管理，所以从spring中获取realm实例，调用clearCached方法；
+     * :Authorization 是授权访问控制，用于对用户进行的操作授权，证明该用户是否允许进行当前操作，如访问某个链接，某个资源文件等。
+     *
+     * @param principals 身份
+     * @return 角色-资源
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
+        /*
+         * 当没有使用缓存的时候，不断刷新页面的话，这个代码会不断执行，
+         * 当其实没有必要每次都重新设置权限信息，所以我们需要放到缓存中进行管理；
+         * 当放到缓存中时，这样的话，doGetAuthorizationInfo就只会执行一次了，
+         * 缓存过期之后会再次执行。
+         */
+        log.info("into doGetAuthorizationInfo method ... ");
+
+        Long userId = getUserId(principals);
+
+        if (userId == null || userId == 0) {
+            return new SimpleAuthorizationInfo();
+        }
+
+        return setRolesAndPermissions(userId);
+    }
+
+    private Long getUserId(PrincipalCollection principals) {
+
+        String username = String.valueOf(getAvailablePrincipal(principals));
+
+        if (StringUtils.isBlank(username)) {
+            return null;
+        }
+
+        UserDTO userDTO = userService.getUser(username);
+
+        if (userDTO == null) {
+            return null;
+        }
+
+        return userDTO.getUserId();
+    }
+
+    public SimpleAuthorizationInfo setRolesAndPermissions(Long userId) {
+
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+
+        Set<String> roles = roleService.listRoleNames(userId);
+
+        info.setRoles(roles);
+
+        return info;
+    }
+
 }

@@ -2,9 +2,9 @@ package com.meng.user.service.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.entity.dto.UserDTO;
-
-import java.util.Set;
+import com.meng.user.web.entity.request.UserReq;
 
 public interface UserService {
 
@@ -27,9 +27,9 @@ public interface UserService {
     /**
      * 用户登录判断
      *
-     * @param userDTO 用户信息
+     * @param userReq 用户信息
      */
-    void login(UserDTO userDTO);
+    void login(UserReq userReq);
 
     /**
      * 查询单个用户
@@ -53,7 +53,7 @@ public interface UserService {
      * @param page 分页对象
      * @return 用户集合
      */
-    IPage<UserDTO> listUsers(Page<UserDTO> page);
+    IPage<UserDO> listUsers(Page<UserDO> page);
 
     /**
      * 插入一条记录

@@ -1,12 +1,14 @@
 package com.meng.user.repository.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -17,21 +19,21 @@ import java.io.Serializable;
  * UUID             32位UUID字符串
  * NONE             无状态
  * ID_WORKER_STR    分布式全局唯一ID 字符串类型
- * @author 大橙子
  *
+ * @author 大橙子
  * @TableName(value = "sys_role", resultMap = "RoleResultMap")
  */
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @TableName(value = "sys_role")
-public class Role extends Model<Role> {
+public class RoleDO extends Model<RoleDO> {
 
-    private static final long serialVersionUID = 80327963628797536L;
     /**
-     * 主键
+     * 角色id
      */
-    @TableId(value = "role_id")
+    @TableId(value = "role_id", type = IdType.AUTO)
     private Long roleId;
     /**
      * 角色名称
@@ -42,6 +44,11 @@ public class Role extends Model<Role> {
      */
     private String description;
     /**
+     * 是否可用(0:false 1:true)
+     */
+    @TableField("is_activation")
+    private Boolean activation;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -49,11 +56,7 @@ public class Role extends Model<Role> {
      * 修改时间
      */
     private String modifiedTime;
-    /**
-     * 是否可用(0:false 1:true)
-     */
-    @TableField("is_activation")
-    private Boolean activation = Boolean.FALSE;
+
 
     @Override
     protected Serializable pkVal() {
