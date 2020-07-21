@@ -13,14 +13,14 @@ import com.meng.shiro.entity.dto.RoleDTO;
 import com.meng.shiro.entity.po.Role;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子
  * @create 2019/10/8
  * @since 1.0.0
  */
-public interface RoleDTOConvert extends Convert<RoleDTO,Role> {
+public interface RoleDTOConvert extends Convert<RoleDTO, Role> {
 
     /**
      * 转换userDTO为userPO

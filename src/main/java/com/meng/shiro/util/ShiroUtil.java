@@ -17,7 +17,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子
@@ -235,7 +235,7 @@ public class ShiroUtil {
         if (isGuest()) {
             return null;
         } else {
-            return (UserDTO)getSubject().getPrincipals().getPrimaryPrincipal();
+            return (UserDTO) getSubject().getPrincipals().getPrimaryPrincipal();
         }
     }
 

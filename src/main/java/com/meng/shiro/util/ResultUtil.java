@@ -10,7 +10,7 @@
 package com.meng.shiro.util;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子

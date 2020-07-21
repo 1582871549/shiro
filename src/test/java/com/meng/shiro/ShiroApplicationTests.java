@@ -47,14 +47,14 @@ public class ShiroApplicationTests {
     }
 
     @Test
-    public void testPamter(){
+    public void testPamter() {
         System.out.println("name = " + myProperties);
         System.out.println(druidProperties);
         System.out.println("------------------");
     }
 
     @Test
-    public void aaa(){
+    public void aaa() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("dudu");
         userDTO.setPhone("123");

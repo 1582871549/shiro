@@ -81,8 +81,8 @@ public class BaseController<T> {
 
     /**
      * 返回失败消息
-     * @param message  自定义消息
      *
+     * @param message 自定义消息
      * @return json
      */
     protected String error(String message) {
@@ -100,8 +100,8 @@ public class BaseController<T> {
 
     /**
      * 返回成功消息
-     * @param message  自定义消息
      *
+     * @param message 自定义消息
      * @return json
      */
     protected String success(String message) {
@@ -110,8 +110,8 @@ public class BaseController<T> {
 
     /**
      * 返回成功消息
-     * @param data  数据
      *
+     * @param data 数据
      * @return json
      */
     protected String success(T data) {
@@ -120,9 +120,9 @@ public class BaseController<T> {
 
     /**
      * 返回成功消息
-     * @param message  自定义消息
-     * @param data     数据
      *
+     * @param message 自定义消息
+     * @param data    数据
      * @return json
      */
     protected String success(String message, T data) {
@@ -131,9 +131,9 @@ public class BaseController<T> {
 
     /**
      * 返回成功消息
+     *
      * @param data  数据
      * @param total 条数
-     *
      * @return json
      */
     protected String success(T data, int total) {

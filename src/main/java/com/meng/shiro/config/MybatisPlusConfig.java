@@ -24,6 +24,7 @@ public class MybatisPlusConfig {
 
     /**
      * mybatis-plus分页插件
+     *
      * @return paginationInterceptor
      */
     @Bean
@@ -43,6 +44,7 @@ public class MybatisPlusConfig {
 
     /**
      * 配置事务管理器
+     *
      * @return dataSourceTransactionManager
      */
     @Bean

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子
@@ -32,7 +32,7 @@ public class CopyDemo {
     @Autowired
     private MyProperties myProperties;
 
-    public void aa () {
+    public void aa() {
         System.out.println(myProperties.getName());
     }
 
@@ -56,13 +56,13 @@ public class CopyDemo {
         // System.out.println("role   :   " + role);
     }
 
-    public static String[] getNullPropertyNames (Object source) {
+    public static String[] getNullPropertyNames(Object source) {
 
         final BeanWrapper src = new BeanWrapperImpl(source);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
         Set<String> emptyNames = new HashSet<>();
-        for(PropertyDescriptor pd : pds) {
+        for (PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
             if (srcValue == null) {
                 emptyNames.add(pd.getName());
@@ -72,7 +72,7 @@ public class CopyDemo {
         return emptyNames.toArray(result);
     }
 
-    public static void copyPropertiesIgnoreNull(Object src, Object target){
+    public static void copyPropertiesIgnoreNull(Object src, Object target) {
         BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
     }
 }

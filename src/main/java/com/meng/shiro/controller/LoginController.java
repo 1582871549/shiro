@@ -28,15 +28,14 @@ import java.util.Map;
 
 /**
  * <p>
- *     登陆接口
+ * 登陆接口
  * </p>
  *
  * @author 大橙子
  * @date 2019/3/25
- * @since 1.0.0
- *
  * @RequiresPermissions(value={"permission:view","permission:aix"}, logical= Logical.AND) 同时具有
  * @RequiresPermissions(value={"permission:view","permission:aix"}, logical= Logical.OR)  一个就行
+ * @since 1.0.0
  */
 @Controller
 @Slf4j
@@ -47,8 +46,8 @@ public class LoginController extends BaseController {
 
     /**
      * 跳转登陆页
-     *      已通过验证的用户跳转主页(不包含 记住我 的用户)
-     *      未通过验证的用户重定向到登陆页
+     * 已通过验证的用户跳转主页(不包含 记住我 的用户)
+     * 未通过验证的用户重定向到登陆页
      *
      * @return path
      */
@@ -65,7 +64,7 @@ public class LoginController extends BaseController {
     // success(ReturnCodeEnum.SUCCESS.getCode(), "");
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(HttpServletRequest request, Map<String, Object> map){
+    public String login(HttpServletRequest request, Map<String, Object> map) {
 
         log.info("into the login method ...");
         // 登录失败从request中获取shiro处理的异常信息。shiroLoginFailure:就是shiro异常类的全类名.
@@ -98,6 +97,7 @@ public class LoginController extends BaseController {
 
     /**
      * 主页
+     *
      * @param session
      * @param model
      * @return

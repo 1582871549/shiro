@@ -15,7 +15,7 @@ import com.meng.shiro.entity.po.Resource;
 import com.meng.shiro.entity.po.User;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子
