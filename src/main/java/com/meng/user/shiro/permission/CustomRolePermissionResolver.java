@@ -51,15 +51,8 @@ public class CustomRolePermissionResolver implements RolePermissionResolver {
         Set<String> permissionUrls = getPermissions(roleName);
 
         if (permissionResolver instanceof WildcardPermissionResolver) {
-
             for (String permissionUrl : permissionUrls) {
                 permissions.add(new WildcardPermission(permissionUrl));
-            }
-        }
-
-        if (permissionResolver instanceof BitPermissionResolver) {
-            for (String permissionUrl : permissionUrls) {
-                permissions.add(new BitPermission(permissionUrl));
             }
         }
 

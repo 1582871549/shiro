@@ -6,7 +6,6 @@ import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.ModularRealmAuthorizer;
 import org.apache.shiro.authz.permission.PermissionResolver;
-import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.authz.permission.WildcardPermissionResolver;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.RememberMeManager;
@@ -105,8 +104,8 @@ public class ShiroConfig {
     @Bean(name = "securityManager")
     public SecurityManager securityManager(UserRealm userRealm,
                                            EhCacheManager ehCacheManager,
-                                           RememberMeManager rememberMeManager,
-                                           ModularRealmAuthorizer modularRealmAuthorizer) {
+                                           ModularRealmAuthorizer modularRealmAuthorizer,
+                                           RememberMeManager rememberMeManager) {
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userRealm);
@@ -146,17 +145,21 @@ public class ShiroConfig {
      * @return hashedCredentialsMatcher
      */
     @Bean(name = "hashedCredentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+    public HashedCredentialsMatcher hashedCredentialsMatcher(ShiroProperties shiroProperties) {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("SHA-256");
-        hashedCredentialsMatcher.setHashIterations(2);
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
+        hashedCredentialsMatcher.setHashAlgorithmName(shiroProperties.getPassword().getHashAlgorithm());
+        hashedCredentialsMatcher.setHashIterations(shiroProperties.getPassword().getHashIterations());
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(shiroProperties.getPassword().isStoredCredentialsHexEncoded());
+
+        System.out.println("===================");
+        System.out.println(hashedCredentialsMatcher);
+        System.out.println("===================");
         return hashedCredentialsMatcher;
     }
 
     /**
      * 权限 解析器
-     *
+     * <p>
      * 根据权限操作符, 创建不同的权限实例
      *
      * @return 权限 解析器
@@ -172,21 +175,19 @@ public class ShiroConfig {
 
     /**
      * 权限 解析器
-     *
+     * <p>
      * 根据权限操作符, 创建不同的权限实例
      *
      * @return 权限 解析器
      */
     @Bean(name = "permissionResolver")
     public PermissionResolver permissionResolver() {
-        // 位权限操作符
-        // return new BitPermissionResolver();
         return new WildcardPermissionResolver();
     }
 
     /**
      * 角色-权限 解析器
-     *
+     * <p>
      * 根据角色名称获取对应的权限列表, 对相应的权限进行缓存管理
      *
      * @return 角色-权限 解析器

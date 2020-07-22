@@ -58,6 +58,17 @@ public class ShiroUtil {
     }
 
     /**
+     * shiro密码加密工具类
+     *
+     * @param credentials 密码
+     * @param saltSource  密码盐
+     * @return 加密字符串
+     */
+    public static String sha256(String credentials, String saltSource) {
+        return new SimpleHash(HASH_ALGORITHM_NAME, credentials, saltSource, HASH_ITERATIONS).toHex();
+    }
+
+    /**
      * 获取当前 Subject
      *
      * @return subject

@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.user.common.exception.BusinessException;
 import com.meng.user.common.util.BeanCopyUtil;
 import com.meng.user.common.util.ResultUtil;
+import com.meng.user.common.util.ShiroUtil;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.repository.mapper.UserMapper;
 import com.meng.user.service.system.UserService;
 import com.meng.user.service.system.entity.dto.UserDTO;
 import com.meng.user.web.entity.request.UserReq;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -33,6 +33,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    public String updatePassword(String password) {
+
+        String salt = ShiroUtil.getRandomSalt(16);
+
+        return ShiroUtil.sha256(password, salt);
+    }
 
     @Override
     public void addCorrelationRoles(Long userId, Long... roleIds) {
