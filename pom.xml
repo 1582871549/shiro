@@ -35,7 +35,23 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- log4j2 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+        <!-- 加上这个才能辨认到log4j2.yml文件 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
 
         <!-- test -->
@@ -61,7 +77,6 @@
         </dependency>
 
 
-
         <!-- tomcat -->
 
         <!-- 因为SpringBootServletInitializer需要依赖 javax.servlet，
@@ -81,7 +96,6 @@
         </dependency>
 
 
-
         <!-- thymeleaf -->
 
         <!-- thymeleaf-spring -->
@@ -96,7 +110,6 @@
             <artifactId>thymeleaf-extras-shiro</artifactId>
             <version>2.0.0</version>
         </dependency>
-
 
 
         <!-- shiro -->
@@ -128,7 +141,6 @@
         </dependency>
 
 
-
         <!-- db -->
 
         <!-- mybatis-plus -->
@@ -136,13 +148,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.2.0</version>
-        </dependency>
-
-        <!-- mybatis-spring -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
         </dependency>
 
         <!-- mysql -->
@@ -166,13 +171,12 @@
             </exclusions>
         </dependency>
 
-        <!--druid-->
+        <!-- druid -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.9</version>
         </dependency>
-
 
 
         <!-- other -->
@@ -201,18 +205,6 @@
 
     <build>
         <finalName>shiro</finalName>
-        <!-- resources 属性影响yaml文件属性的注入 -->
-        <!-- <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources> -->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
