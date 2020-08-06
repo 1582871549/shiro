@@ -33,7 +33,7 @@ import java.util.Map;
  * @date 2019/3/25
  * @since 1.0.0
  */
-@Order(1)
+// @Order(1)
 @Configuration
 public class ShiroConfig {
 
@@ -161,26 +161,10 @@ public class ShiroConfig {
      * @return 权限 解析器
      */
     @Bean(name = "modularRealmAuthorizer")
-    public ModularRealmAuthorizer modularRealmAuthorizer(PermissionResolver permissionResolver,
-                                                         CustomRolePermissionResolver customRolePermissionResolver) {
+    public ModularRealmAuthorizer modularRealmAuthorizer(CustomRolePermissionResolver customRolePermissionResolver) {
         ModularRealmAuthorizer authorizer = new ModularRealmAuthorizer();
-        authorizer.setPermissionResolver(permissionResolver);
         authorizer.setRolePermissionResolver(customRolePermissionResolver);
         return authorizer;
-    }
-
-    /**
-     * 权限 解析器
-     *
-     * 根据权限操作符, 创建不同的权限实例
-     *
-     * @return 权限 解析器
-     */
-    @Bean(name = "permissionResolver")
-    public PermissionResolver permissionResolver() {
-        // 位权限操作符
-        // return new BitPermissionResolver();
-        return new WildcardPermissionResolver();
     }
 
     /**
@@ -191,10 +175,8 @@ public class ShiroConfig {
      * @return 角色-权限 解析器
      */
     @Bean(name = "customRolePermissionResolver")
-    public CustomRolePermissionResolver customRolePermissionResolver(PermissionResolver permissionResolver) {
-        CustomRolePermissionResolver resolver = new CustomRolePermissionResolver();
-        resolver.setPermissionResolver(permissionResolver);
-        return resolver;
+    public CustomRolePermissionResolver customRolePermissionResolver() {
+        return new CustomRolePermissionResolver();
     }
 
     /**

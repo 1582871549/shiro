@@ -1,6 +1,6 @@
 package com.meng.user;
 
-import com.meng.user.common.util.BeanCopyUtil;
+import com.meng.user.common.util.BeanUtil;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.entity.dto.UserDTO;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class BeanCopyTest {
         userDTO.setUsername("root");
         userDTO.setPassword("dudu");
 
-        UserDO copy = BeanCopyUtil.copy(userDTO, UserDO.class);
+        UserDO copy = BeanUtil.copy(userDTO, UserDO.class);
 
         System.out.println(copy);
 

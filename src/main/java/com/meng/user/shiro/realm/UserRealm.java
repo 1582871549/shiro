@@ -1,15 +1,18 @@
 package com.meng.user.shiro.realm;
 
-import com.meng.user.service.system.PermissionService;
-import com.meng.user.service.system.RoleService;
-import com.meng.user.service.system.entity.dto.PermissionDTO;
-import com.meng.user.service.system.entity.dto.RoleDTO;
-import com.meng.user.service.system.entity.dto.UserDTO;
-import com.meng.user.service.system.UserService;
 import com.meng.user.common.util.ShiroUtil;
+import com.meng.user.service.system.RoleService;
+import com.meng.user.service.system.UserService;
+import com.meng.user.service.system.entity.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -17,7 +20,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.Set;
 
 /**

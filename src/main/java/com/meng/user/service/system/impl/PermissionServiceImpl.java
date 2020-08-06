@@ -1,6 +1,6 @@
 package com.meng.user.service.system.impl;
 
-import com.meng.user.common.util.BeanCopyUtil;
+import com.meng.user.common.util.BeanUtil;
 import com.meng.user.common.util.ResultUtil;
 import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.mapper.PermissionMapper;
@@ -43,7 +43,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<PermissionDTO> listPermissions(Long roleId) {
         List<PermissionDO> permissionDOS = permissionMapper.listPermissions(roleId);
-        return BeanCopyUtil.copyList(permissionDOS, PermissionDTO.class);
+        return BeanUtil.copyList(permissionDOS, PermissionDTO.class);
     }
 
     @Override

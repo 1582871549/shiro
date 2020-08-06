@@ -1,7 +1,7 @@
 package com.meng.user.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.meng.user.common.util.BeanCopyUtil;
+import com.meng.user.common.util.BeanUtil;
 import com.meng.user.common.util.ResultUtil;
 import com.meng.user.repository.entity.RoleDO;
 import com.meng.user.repository.mapper.RoleMapper;
@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO getRole(String roleName) {
         RoleDO roleDO = roleMapper.selectOne(new QueryWrapper<RoleDO>().eq("roleName", roleName));
-        return BeanCopyUtil.copy(roleDO, RoleDTO.class);
+        return BeanUtil.copy(roleDO, RoleDTO.class);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleDTO> listRoles(Long userId) {
         List<RoleDO> roleDOS = roleMapper.listRoles(userId);
-        return BeanCopyUtil.copyList(roleDOS, RoleDTO.class);
+        return BeanUtil.copyList(roleDOS, RoleDTO.class);
     }
 
     /**

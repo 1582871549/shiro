@@ -7,10 +7,8 @@ import com.meng.user.service.system.entity.dto.PermissionDTO;
 import com.meng.user.service.system.entity.dto.RoleDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.Permission;
-import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.authz.permission.WildcardPermission;
-import org.apache.shiro.authz.permission.WildcardPermissionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -37,8 +35,6 @@ import java.util.Set;
  */
 public class CustomRolePermissionResolver implements RolePermissionResolver {
 
-    private PermissionResolver permissionResolver;
-
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -50,17 +46,8 @@ public class CustomRolePermissionResolver implements RolePermissionResolver {
         List<Permission> permissions = new ArrayList<>();
         Set<String> permissionUrls = getPermissions(roleName);
 
-        if (permissionResolver instanceof WildcardPermissionResolver) {
-
-            for (String permissionUrl : permissionUrls) {
-                permissions.add(new WildcardPermission(permissionUrl));
-            }
-        }
-
-        if (permissionResolver instanceof BitPermissionResolver) {
-            for (String permissionUrl : permissionUrls) {
-                permissions.add(new BitPermission(permissionUrl));
-            }
+        for (String permissionUrl : permissionUrls) {
+            permissions.add(new WildcardPermission(permissionUrl));
         }
 
         return permissions;
@@ -89,11 +76,4 @@ public class CustomRolePermissionResolver implements RolePermissionResolver {
         return perms;
     }
 
-    public PermissionResolver getPermissionResolver() {
-        return permissionResolver;
-    }
-
-    public void setPermissionResolver(PermissionResolver permissionResolver) {
-        this.permissionResolver = permissionResolver;
-    }
 }

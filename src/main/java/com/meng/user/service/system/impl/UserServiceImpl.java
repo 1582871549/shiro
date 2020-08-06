@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.user.common.exception.BusinessException;
-import com.meng.user.common.util.BeanCopyUtil;
+import com.meng.user.common.util.BeanUtil;
 import com.meng.user.common.util.ResultUtil;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.repository.mapper.UserMapper;
@@ -12,7 +12,6 @@ import com.meng.user.service.system.UserService;
 import com.meng.user.service.system.entity.dto.UserDTO;
 import com.meng.user.web.entity.request.UserReq;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -76,13 +75,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUser(Long userId) {
         UserDO userDO = userMapper.selectById(userId);
-        return BeanCopyUtil.copy(userDO, UserDTO.class);
+        return BeanUtil.copy(userDO, UserDTO.class);
     }
 
     @Override
     public UserDTO getUser(String username) {
         UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().eq("username", username));
-        return BeanCopyUtil.copy(userDO, UserDTO.class);
+        return BeanUtil.copy(userDO, UserDTO.class);
     }
 
     @Override
@@ -92,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean saveUser(UserDTO userDTO) {
-        UserDO userDO = BeanCopyUtil.copy(userDTO, UserDO.class);
+        UserDO userDO = BeanUtil.copy(userDTO, UserDO.class);
         return ResultUtil.returnBool(userMapper.insert(userDO));
     }
 
@@ -107,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUser(UserDTO userDTO) {
-        UserDO userDO = BeanCopyUtil.copy(userDTO, UserDO.class);
+        UserDO userDO = BeanUtil.copy(userDTO, UserDO.class);
         return ResultUtil.returnBool(userMapper.updateById(userDO));
     }
 

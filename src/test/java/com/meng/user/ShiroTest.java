@@ -2,8 +2,17 @@ package com.meng.user;
 
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
@@ -29,14 +38,29 @@ import java.util.Arrays;
  *      可读、可维护、单元测试
  *      不要重复、单一职责、表达力
  */
-public class ShiroTest extends BaseTest {
+public class ShiroTest extends AbstractShiroTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:ini/shiro.ini");
+
+        setSecurityManager(factory.getInstance());
+    }
+
+    @AfterClass
+    public static void tearDownSubject() {
+        clearSubject();
+    }
 
     @Test
     public void testHasRole() {
 
-        login("classpath:ini/shiro-role.ini", "zhang", "123");
+        login("dudu", "123456");
 
-        boolean hasRole = getSubject().hasRole("admin");
+        Subject subject = getSubject();
+
+        boolean hasRole = subject.hasRole("admin");
 
         boolean hasAllRoles = getSubject().hasAllRoles(Arrays.asList("admin", "root"));
 
@@ -50,7 +74,7 @@ public class ShiroTest extends BaseTest {
     @Test
     public void testCheckRole() {
 
-        login("classpath:ini/shiro-role.ini", "zhang", "123");
+        login("zhang", "123");
 
         try {
             getSubject().checkRole("admin");
@@ -67,7 +91,7 @@ public class ShiroTest extends BaseTest {
     @Test
     public void testIsPermitted() {
 
-        login("classpath:ini/shiro-permission.ini", "zhang", "123");
+        login("zhang", "123");
 
         boolean permittedCreate = getSubject().isPermitted("user:create");
 
@@ -83,7 +107,7 @@ public class ShiroTest extends BaseTest {
     @Test
     public void testCheckPermission() {
 
-        login("classpath:ini/shiro-permission.ini", "zhang", "123");
+        login("zhang", "123");
 
         try {
             getSubject().checkPermission("user:create");
@@ -98,30 +122,15 @@ public class ShiroTest extends BaseTest {
     }
 
 
-    @Test
-    public void testBitIsPermitted() {
-
-        login("classpath:ini/shiro-authorizer.ini", "zhang", "123");
-        //判断拥有权限：user:create
-        Assert.assertTrue(getSubject().isPermitted("user1:update"));
-        Assert.assertTrue(getSubject().isPermitted("user2:update"));
-        //通过二进制位的方式表示权限
-        Assert.assertTrue(getSubject().isPermitted("+user1+2"));//新增权限
-        Assert.assertTrue(getSubject().isPermitted("+user1+8"));//查看权限
-        Assert.assertTrue(getSubject().isPermitted("+user2+10"));//新增及查看
-
-        Assert.assertFalse(getSubject().isPermitted("+user1+4"));//没有删除权限
-
-        Assert.assertTrue(getSubject().isPermitted("menu:view"));//通过MyRolePermissionResolver解析得到的权限
-    }
-
     @Test(expected = ExcessiveAttemptsException.class)
     public void testRetryLimitHashedCredentialsMatcherWithMyRealm() {
         for(int i = 1; i <= 5; i++) {
             try {
-                login("classpath:ini/shiro-retryLimitHashedCredentialsMatcher.ini", "liu", "1234");
+                login("liu", "1234");
             } catch (Exception e) {/*ignore*/}
         }
-        login("classpath:ini/shiro-retryLimitHashedCredentialsMatcher.ini", "liu", "234");
+        login("liu", "234");
     }
+
+
 }

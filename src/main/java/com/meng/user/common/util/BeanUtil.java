@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author dujianwei
  * @create 2020-05-26
  */
-public class BeanCopyUtil {
+public class BeanUtil {
 
     /**
      * 创建过的BeanCopier实例放到缓存中，下次可以直接获取，提升性能
