@@ -1,6 +1,5 @@
 package com.meng.user.shiro.realm;
 
-import com.meng.user.common.util.ShiroUtil;
 import com.meng.user.service.system.RoleService;
 import com.meng.user.service.system.UserService;
 import com.meng.user.service.system.entity.dto.UserDTO;
@@ -83,10 +82,6 @@ public class UserRealm extends AuthorizingRealm {
         if (userDTO.getLocked()) {
             throw new LockedAccountException("账号已锁定");
         }
-
-        ShiroUtil.setSessionAttribute("user", userDTO);
-
-        // org.apache.shiro.authc.credential.DefaultPasswordService
 
         return new SimpleAuthenticationInfo(
                 username,
