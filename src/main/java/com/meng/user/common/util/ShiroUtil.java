@@ -17,7 +17,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈〉
  *
  * @author 大橙子
@@ -54,6 +54,17 @@ public class ShiroUtil {
      * @return 加密字符串
      */
     public static String md5(String credentials, String saltSource) {
+        return new SimpleHash(HASH_ALGORITHM_NAME, credentials, saltSource, HASH_ITERATIONS).toHex();
+    }
+
+    /**
+     * shiro密码加密工具类
+     *
+     * @param credentials 密码
+     * @param saltSource  密码盐
+     * @return 加密字符串
+     */
+    public static String sha256(String credentials, String saltSource) {
         return new SimpleHash(HASH_ALGORITHM_NAME, credentials, saltSource, HASH_ITERATIONS).toHex();
     }
 
@@ -235,7 +246,7 @@ public class ShiroUtil {
         if (isGuest()) {
             return null;
         } else {
-            return (UserDTO)getSubject().getPrincipals().getPrimaryPrincipal();
+            return (UserDTO) getSubject().getPrincipals().getPrimaryPrincipal();
         }
     }
 

@@ -27,5 +27,10 @@ mybatis-plus:
 logging:
   config: classpath:config/log4j2.yml
 
-
+# 自定义shiro属性配置类
+shiro:
+  password:
+    hash-algorithm: SHA-256
+    hash-iterations: 2
+    stored-credentials-hex-encoded: true
 

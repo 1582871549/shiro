@@ -8,6 +8,8 @@ import com.meng.user.web.entity.request.UserReq;
 
 public interface UserService {
 
+    String updatePassword(String credentials);
+
     /**
      * 添加用户-角色之间关系
      *

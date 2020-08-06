@@ -20,10 +20,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
-
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
+ *
  * @author 大橙子
  * @create 2019/3/25
  * @since 1.0.0
@@ -52,6 +51,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 认证
+     *
      * @param token
      * @return
      * @throws AuthenticationException
@@ -91,7 +91,7 @@ public class UserRealm extends AuthorizingRealm {
         return new SimpleAuthenticationInfo(
                 username,
                 userDTO.getPassword(),
-                ByteSource.Util.bytes(username + userDTO.getSalt()),
+                ByteSource.Util.bytes(userDTO.getSalt()),
                 getName()
         );
     }
@@ -127,7 +127,7 @@ public class UserRealm extends AuthorizingRealm {
             return new SimpleAuthorizationInfo();
         }
 
-        return setRolesAndPermissions(userId);
+        return setRoles(userId);
     }
 
     private Long getUserId(PrincipalCollection principals) {
@@ -147,14 +147,9 @@ public class UserRealm extends AuthorizingRealm {
         return userDTO.getUserId();
     }
 
-    public SimpleAuthorizationInfo setRolesAndPermissions(Long userId) {
-
+    public SimpleAuthorizationInfo setRoles(Long userId) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-
-        Set<String> roles = roleService.listRoleNames(userId);
-
-        info.setRoles(roles);
-
+        info.setRoles(roleService.listRoleNames(userId));
         return info;
     }
 

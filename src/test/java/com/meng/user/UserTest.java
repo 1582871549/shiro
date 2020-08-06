@@ -3,13 +3,14 @@ package com.meng.user;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meng.user.common.config.DruidProperties;
+import com.meng.user.common.config.ShiroProperties;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.PermissionService;
+import com.meng.user.service.system.RoleService;
+import com.meng.user.service.system.UserService;
 import com.meng.user.service.system.entity.dto.PermissionDTO;
 import com.meng.user.service.system.entity.dto.RoleDTO;
 import com.meng.user.service.system.entity.dto.UserDTO;
-import com.meng.user.service.system.RoleService;
-import com.meng.user.service.system.UserService;
 import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.junit.Test;
@@ -36,7 +37,18 @@ public class UserTest {
 
     @Autowired
     DruidProperties druidProperties;
+    @Autowired
+    ShiroProperties shiroProperties;
 
+    @Test
+    public void password() {
+
+        String password = userService.updatePassword("123");
+
+        System.out.println("----------------");
+        System.out.println(password);
+        System.out.println("----------------");
+    }
 
     @Test
     public void contextLoads() {
@@ -60,7 +72,9 @@ public class UserTest {
 
     @Test
     public void testPamter() {
+        System.out.println("------------------");
         System.out.println(druidProperties);
+        System.out.println(shiroProperties);
         System.out.println("------------------");
     }
 
@@ -118,7 +132,7 @@ public class UserTest {
     @Test
     public void setRolesAndPermissions() {
 
-        SimpleAuthorizationInfo info = userRealm.setRolesAndPermissions(1L);
+        SimpleAuthorizationInfo info = userRealm.setRoles(1L);
 
         System.out.println("--------------------");
         System.out.println(info);
