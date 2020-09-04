@@ -47,14 +47,23 @@
         t1.modified_time
     </sql>
 
-    <select id="listPermissions" resultMap="BaseResultMap" parameterType="long">
+    <select id="listPermissions" resultMap="BaseResultMap" parameterType="com.meng.user.web.controller.entity.PermissionQuery">
         SELECT
             <include refid="T1_Column_List"/>
         FROM
-            sys_permission as t1 LEFT JOIN
-            sys_role_permission as t2 on t1.permission_id = t2.permission_id
-        WHERE
+            sys_permission as t1
+            LEFT JOIN sys_role_permission as t2 on t1.permission_id = t2.permission_id
+        <where>
             t2.role_id = #{roleId}
+
+            <if test="type != null">
+                and t1.type = #{type}
+            </if>
+            <if test="activation != null">
+                and t1.is_activation = #{activation}
+            </if>
+        </where>
+
     </select>
 
 </mapper>

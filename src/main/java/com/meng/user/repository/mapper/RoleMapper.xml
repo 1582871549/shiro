@@ -29,12 +29,13 @@
         t1.modified_time
     </sql>
 
-    <select id="listRoles" resultMap="BaseResultMap" parameterType="long">
+    <!-- 通过用户id查询用户所拥有的所有角色 -->
+    <select id="listRolesByUserId" resultMap="BaseResultMap" parameterType="long">
         SELECT
             <include refid="T1_Column_List"/>
         FROM
-            sys_role as t1 LEFT JOIN
-            sys_user_role as t2 on t1.role_id = t2.role_id
+            sys_role as t1
+            LEFT JOIN sys_user_role as t2 on t1.role_id = t2.role_id
         WHERE
             t2.user_id = #{userId}
     </select>

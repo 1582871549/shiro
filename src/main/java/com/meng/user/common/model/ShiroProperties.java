@@ -1,15 +1,18 @@
-package com.meng.user.common.config;
+package com.meng.user.common.model;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * shiro基础属性配置
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = ShiroProperties.PREFIX)
 public class ShiroProperties {
 
-    static final String PREFIX = "shiro";
+    public static final String PREFIX = "shiro";
 
     private final ShiroProperties.Password password = new ShiroProperties.Password();
 

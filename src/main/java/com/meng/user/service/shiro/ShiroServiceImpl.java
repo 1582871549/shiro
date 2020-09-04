@@ -1,11 +1,11 @@
 package com.meng.user.service.shiro;
 
 import com.meng.user.service.system.PermissionService;
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -21,16 +21,11 @@ import java.util.Map;
  * 而这段代码是在项目启动的时候加载的。加载的数据是放到内存中的。但是当权限增加或者删除时，正常情况下不会重新启动来，重新加载权限。所以需要调用以下代码的updatePermission()方法来重新加载权限。其实下面的代码有些重复了，可以稍微调整下，我就先这么写了。
  */
 @Service
+@RequiredArgsConstructor
 public class ShiroServiceImpl {
 
     private final ShiroFilterFactoryBean shiroFilterFactoryBean;
     private final PermissionService permissionService;
-
-    @Autowired
-    public ShiroServiceImpl(PermissionService permissionService, ShiroFilterFactoryBean shiroFilterFactoryBean) {
-        this.permissionService = permissionService;
-        this.shiroFilterFactoryBean = shiroFilterFactoryBean;
-    }
 
     // @Autowired
     // private RedisSessionDAO redisSessionDAO;
@@ -66,32 +61,32 @@ public class ShiroServiceImpl {
         synchronized (shiroFilterFactoryBean) {
 
             AbstractShiroFilter shiroFilter = null;
+
             try {
-                shiroFilter = (AbstractShiroFilter) shiroFilterFactoryBean
-                        .getObject();
+                shiroFilter = (AbstractShiroFilter) shiroFilterFactoryBean.getObject();
             } catch (Exception e) {
                 throw new RuntimeException(
                         "get ShiroFilter from shiroFilterFactoryBean error!");
             }
 
-            PathMatchingFilterChainResolver filterChainResolver = (PathMatchingFilterChainResolver) shiroFilter
-                    .getFilterChainResolver();
-            DefaultFilterChainManager manager = (DefaultFilterChainManager) filterChainResolver
-                    .getFilterChainManager();
+            PathMatchingFilterChainResolver filterChainResolver = (PathMatchingFilterChainResolver) shiroFilter.getFilterChainResolver();
+
+            DefaultFilterChainManager manager = (DefaultFilterChainManager) filterChainResolver.getFilterChainManager();
 
             // 清空老的权限控制
             manager.getFilterChains().clear();
 
             shiroFilterFactoryBean.getFilterChainDefinitionMap().clear();
-            shiroFilterFactoryBean
-                    .setFilterChainDefinitionMap(loadFilterChainDefinitions());
+            shiroFilterFactoryBean.setFilterChainDefinitionMap(loadFilterChainDefinitions());
+
             // 重新构建生成
-            Map<String, String> chains = shiroFilterFactoryBean
-                    .getFilterChainDefinitionMap();
+            Map<String, String> chains = shiroFilterFactoryBean.getFilterChainDefinitionMap();
+
             for (Map.Entry<String, String> entry : chains.entrySet()) {
+
                 String url = entry.getKey();
-                String chainDefinition = entry.getValue().trim()
-                        .replace(" ", "");
+                String chainDefinition = entry.getValue();
+
                 manager.createChain(url, chainDefinition);
             }
 

@@ -1,14 +1,9 @@
 package com.meng.user.common.config;
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.meng.user.shiro.permission.CustomRolePermissionResolver;
 import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.ModularRealmAuthorizer;
-import org.apache.shiro.authz.permission.PermissionResolver;
-import org.apache.shiro.authz.permission.RolePermissionResolver;
-import org.apache.shiro.authz.permission.WildcardPermissionResolver;
-import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
@@ -23,7 +18,6 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.annotation.Order;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,20 +60,6 @@ public class ShiroConfig {
         // filtersMap.put("kaptcha", kaptchaFilter);
         // bean.setFilters(filtersMap);
 
-        /*
-         * 配置自定义拦截器
-         *
-         * authc:所有url都必须认证通过才可以访问
-         * anon:所有url都都可以匿名访问
-         */
-        Map<String, String> interceptsMap = new LinkedHashMap<>();
-
-        interceptsMap.put("/index", "user");
-        interceptsMap.put("/logout", "logout");
-        // map.put("/**", "anon");
-        interceptsMap.put("/user/**", "authc");
-        interceptsMap.put("/static/**", "anon");
-        interceptsMap.put("/**", "authc");
 
         /*
          * 配置用户登陆页面
@@ -90,6 +70,18 @@ public class ShiroConfig {
         bean.setSuccessUrl("/index");
         // bean.setUnauthorizedUrl("/error/403_error.html");
         bean.setUnauthorizedUrl("/403");
+
+        /*
+         * 配置自定义拦截器
+         *
+         * authc:所有url都必须认证通过才可以访问
+         * anon:所有url都都可以匿名访问
+         */
+        Map<String, String> interceptsMap = new LinkedHashMap<>();
+        interceptsMap.put("/user/**", "authc");
+        interceptsMap.put("/static/**", "anon");
+        interceptsMap.put("/**", "authc");
+
         bean.setFilterChainDefinitionMap(interceptsMap);
         return bean;
     }
@@ -98,18 +90,15 @@ public class ShiroConfig {
      * 权限管理，这个类组合了登陆，登出，权限，session的处理，是个比较重要的类。
      *
      * @param userRealm      自定义用户域
-     * @param ehCacheManager 缓存管理器
      * @return securityManager
      */
     @Bean(name = "securityManager")
     public SecurityManager securityManager(UserRealm userRealm,
-                                           EhCacheManager ehCacheManager,
                                            RememberMeManager rememberMeManager,
                                            ModularRealmAuthorizer modularRealmAuthorizer) {
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userRealm);
-        securityManager.setCacheManager(ehCacheManager);
         securityManager.setAuthorizer(modularRealmAuthorizer);
         securityManager.setRememberMeManager(rememberMeManager);
         return securityManager;
@@ -177,20 +166,6 @@ public class ShiroConfig {
     @Bean(name = "customRolePermissionResolver")
     public CustomRolePermissionResolver customRolePermissionResolver() {
         return new CustomRolePermissionResolver();
-    }
-
-    /**
-     * EhCacheManager，缓存管理，用户登陆成功后，把用户信息和权限信息缓存起来，
-     * 然后每次用户请求时，放入用户的session中，如果不设置这个bean，每个请求都会查询一次数据库。
-     *
-     * @return ehCacheManager
-     */
-    @Bean(name = "ehCacheManager")
-    @DependsOn("lifecycleBeanPostProcessor")
-    public EhCacheManager ehCacheManager() {
-        EhCacheManager cacheManager = new EhCacheManager();
-        cacheManager.setCacheManagerConfigFile("classpath:config/ehcache-shiro.xml");
-        return cacheManager;
     }
 
     /**
@@ -280,16 +255,5 @@ public class ShiroConfig {
         aasa.setSecurityManager(securityManager);
         return aasa;
     }
-
-    /**
-     * 配置shiro在thymeleaf中使用的自定义tag
-     *
-     * @return shiroDialect
-     */
-    @Bean(name = "shiroDialect")
-    public ShiroDialect shiroDialect() {
-        return new ShiroDialect();
-    }
-
 
 }

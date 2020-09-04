@@ -48,7 +48,7 @@ public class PermissionDO extends Model<PermissionDO> {
      */
     private String operation;
     /**
-     * 类型（0：菜单，1：按钮）
+     * 类型（0：目录，1：菜单，2：按钮）
      */
     private Integer type;
     /**

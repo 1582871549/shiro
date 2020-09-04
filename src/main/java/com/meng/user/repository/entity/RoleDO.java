@@ -21,7 +21,7 @@ import java.io.Serializable;
  * ID_WORKER_STR    分布式全局唯一ID 字符串类型
  *
  * @author 大橙子
- * @TableName(value = "sys_role", resultMap = "RoleResultMap")
+ * @ TableName(value = "sys_role", resultMap = "RoleResultMap")
  */
 @Data
 @NoArgsConstructor

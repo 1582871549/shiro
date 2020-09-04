@@ -1,13 +1,14 @@
 package com.meng.user.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.meng.user.common.util.BeanUtil;
-import com.meng.user.common.util.ResultUtil;
+import com.meng.user.common.enums.PermissionTypeEnum;
+import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.entity.RoleDO;
 import com.meng.user.repository.mapper.RoleMapper;
-import com.meng.user.service.system.entity.dto.RoleDTO;
+import com.meng.user.service.system.PermissionService;
 import com.meng.user.service.system.RoleService;
-
+import com.meng.user.web.controller.entity.PermissionQuery;
+import com.meng.user.web.controller.entity.RoleQuery;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -29,98 +30,91 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
+    private final PermissionService permissionService;
 
     @Override
-    public void addCorrelationPermissions(Long roleId, Long... permissionIds) {
-
-    }
-
-    @Override
-    public void removeCorrelationPermissions(Long roleId, Long... permissionIds) {
-
-    }
-
-    @Override
-    public RoleDTO getRole(Long roleId) {
-
-        RoleDO roleDO = roleMapper.selectById(roleId);
-
-        return null;
-    }
-
-    /**
-     * 查询单个角色
-     *
-     * @param roleName 角色名称
-     * @return 角色
-     */
-    @Override
-    public RoleDTO getRole(String roleName) {
-        RoleDO roleDO = roleMapper.selectOne(new QueryWrapper<RoleDO>().eq("roleName", roleName));
-        return BeanUtil.copy(roleDO, RoleDTO.class);
-    }
-
-    @Override
-    public List<RoleDTO> listRoles() {
-
-        List<RoleDO> roleDOS = roleMapper.selectList(null);
-
+    public RoleDO getRole(Long roleId) {
         return null;
     }
 
     @Override
-    public List<RoleDTO> listRoles(Long userId) {
-        List<RoleDO> roleDOS = roleMapper.listRoles(userId);
-        return BeanUtil.copyList(roleDOS, RoleDTO.class);
+    public RoleDO getRoleByRoleName(String roleName) {
+
+        RoleDO roleDO = roleMapper.selectOne(new QueryWrapper<RoleDO>().eq("role_name", roleName));
+
+        if (roleDO == null) {
+            throw new RuntimeException();
+        }
+
+        return roleDO;
     }
 
-    /**
-     * 查询角色集合
-     *
-     * @param userId 用户id
-     * @return 角色集合
-     */
+    @Override
+    public List<RoleDO> listRoles() {
+        return null;
+    }
+
+    @Override
+    public List<RoleDO> listRoles(RoleQuery roleQuery) {
+
+        List<RoleDO> roleDOS = roleMapper.listRolesByUserId(roleQuery.getUserId());
+
+        if (CollectionUtils.isEmpty(roleDOS)) {
+            return Collections.emptyList();
+        }
+
+        return roleDOS;
+    }
+
+    @Override
+    public void saveRole(RoleDO roleDO) {
+
+    }
+
+    @Override
+    public void updateRole(RoleDO roleDO) {
+
+    }
+
+    @Override
+    public void deleteRole(Long roleId) {
+
+    }
+
     @Override
     public Set<String> listRoleNames(Long userId) {
 
-        List<RoleDO> roleDOS = roleMapper.listRoles(userId);
+        RoleQuery roleQuery = new RoleQuery();
+        roleQuery.setUserId(userId);
 
-        List<RoleDO> list = convertNPE(roleDOS);
+        List<RoleDO> roleDOS = listRoles(roleQuery);
 
-        return list.stream()
+        if (CollectionUtils.isEmpty(roleDOS)) {
+            return Collections.emptySet();
+        }
+
+        return roleDOS.stream()
                 .map(RoleDO::getRoleName)
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * 获取角色相关的权限
+     *
+     * @param roleName 角色名称
+     * @return 该角色拥有的权限
+     */
     @Override
-    public boolean saveRole(RoleDTO roleDTO) {
-        return ResultUtil.returnBool(roleMapper.insert(null));
+    public List<PermissionDO> listPermissions(String roleName) {
+
+        RoleDO roleDO = getRoleByRoleName(roleName);
+
+        PermissionQuery permissionQuery = new PermissionQuery();
+        permissionQuery.setRoleId(roleDO.getRoleId());
+        permissionQuery.setType(PermissionTypeEnum.BUTTON.getType());
+        permissionQuery.setActivation(true);
+
+        return permissionService.listPermissions(permissionQuery);
     }
 
-    @Override
-    public boolean saveOrUpdateRole(RoleDTO roleDTO) {
-        if (roleDTO == null) {
-            return false;
-        }
-        Long roleId = roleDTO.getRoleId();
-
-        return roleId == null || getRole(roleId) == null ? saveRole(roleDTO) : updateRole(roleDTO);
-    }
-
-    @Override
-    public boolean updateRole(RoleDTO roleDTO) {
-        return ResultUtil.returnBool(roleMapper.updateById(null));
-    }
-
-    @Override
-    public boolean deleteRole(Long roleId) {
-        return ResultUtil.returnBool(roleMapper.deleteById(null));
-    }
-
-    private <T> List<T> convertNPE(List<T> list) {
-        if (CollectionUtils.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-        return list;
-    }
 }

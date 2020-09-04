@@ -1,14 +1,12 @@
 package com.meng.user;
 
-import com.meng.user.shiro.permission.CustomRolePermissionResolver;
-import org.apache.shiro.authz.Permission;
+import com.meng.user.common.model.DruidProperties;
+import com.meng.user.common.model.ShiroProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collection;
 
 /**
  *  测试驱动开发
@@ -34,25 +32,28 @@ import java.util.Collection;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ShiroTest {
+public class ConfigTest {
 
     @Autowired
-    private CustomRolePermissionResolver customRolePermissionResolver;
+    private ShiroProperties shiroProperties;
+
+    @Autowired
+    private DruidProperties druidProperties;
 
     @Test
     public void shiroProperties() {
 
         System.out.println("--------------------");
-
-        Collection<Permission> permissions = customRolePermissionResolver.resolvePermissionsInRole("admin");
-
-        for (Permission permission : permissions) {
-            System.out.println(permission);
-        }
-
+        System.out.println(shiroProperties.toString());
         System.out.println("--------------------");
     }
 
+    @Test
+    public void druidProperties() {
 
+        System.out.println("--------------------");
+        System.out.println(druidProperties.toString());
+        System.out.println("--------------------");
+    }
 
 }

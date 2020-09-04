@@ -1,15 +1,6 @@
-/**
- * FileName: ShiroUtil
- * Author:   大橙子
- * Date:     2019/8/8 17:35
- * Description:
- * History:
- * <author>          <time>          <version>          <desc>
- * 作者姓名           修改时间           版本号              描述
- */
 package com.meng.user.common.util;
 
-import com.meng.user.service.system.entity.dto.UserDTO;
+import com.meng.user.repository.entity.UserDO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -24,7 +15,7 @@ import org.apache.shiro.subject.Subject;
  * @create 2019/8/8
  * @since 1.0.0
  */
-public class ShiroUtil {
+public class ShiroHelper {
 
     private static final String NAMES_DELIMETER = ",";
     /**
@@ -242,11 +233,11 @@ public class ShiroUtil {
      *
      * @return ShiroUser
      */
-    public static UserDTO getUser() {
+    public static UserDO getUser() {
         if (isGuest()) {
             return null;
         } else {
-            return (UserDTO) getSubject().getPrincipals().getPrimaryPrincipal();
+            return (UserDO) getSubject().getPrincipals().getPrimaryPrincipal();
         }
     }
 

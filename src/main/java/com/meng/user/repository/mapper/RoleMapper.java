@@ -10,10 +10,11 @@ import java.util.List;
 public interface RoleMapper extends BaseMapper<RoleDO> {
 
     /**
-     * 查询角色集合
+     * 通过用户id查询用户所拥有的所有角色
      *
      * @param userId 用户id
      * @return 角色集合
      */
-    List<RoleDO> listRoles(Long userId);
+    List<RoleDO> listRolesByUserId(Long userId);
+
 }

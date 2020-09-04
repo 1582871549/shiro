@@ -1,9 +1,9 @@
 package com.meng.user.shiro.realm;
 
-import com.meng.user.common.util.ShiroUtil;
+import com.meng.user.common.util.ShiroHelper;
+import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.RoleService;
 import com.meng.user.service.system.UserService;
-import com.meng.user.service.system.entity.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -63,35 +63,31 @@ public class UserRealm extends AuthorizingRealm {
         String username = String.valueOf(token.getPrincipal());
 
         if (StringUtils.isBlank(username)) {
-            log.debug("current token's username is null.");
             throw new AuthenticationException();
-        } else {
-            log.debug("current token's : {}", username);
         }
-
 
         System.out.println("当前登陆密码" + token.getCredentials());
 
         // 通过username从数据库中查找 User对象，如果找到，没找到.
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        UserDTO userDTO = userService.getUser(username);
+        UserDO userDO = userService.getUserByUsername(username);
 
-        if (userDTO == null) {
+        if (userDO == null) {
             throw new UnknownAccountException("账号不存在");
         }
 
-        if (userDTO.getLocked()) {
+        if (userDO.getLocked()) {
             throw new LockedAccountException("账号已锁定");
         }
 
-        ShiroUtil.setSessionAttribute("user", userDTO);
+        ShiroHelper.setSessionAttribute("userDO", userDO);
 
         // org.apache.shiro.authc.credential.DefaultPasswordService
 
         return new SimpleAuthenticationInfo(
                 username,
-                userDTO.getPassword(),
-                ByteSource.Util.bytes(userDTO.getSalt()),
+                userDO.getPassword(),
+                ByteSource.Util.bytes(userDO.getSalt()),
                 getName()
         );
     }
@@ -119,8 +115,6 @@ public class UserRealm extends AuthorizingRealm {
          * 当放到缓存中时，这样的话，doGetAuthorizationInfo就只会执行一次了，
          * 缓存过期之后会再次执行。
          */
-        log.info("into doGetAuthorizationInfo method ... ");
-
         Long userId = getUserId(principals);
 
         if (userId == null || userId == 0) {
@@ -138,13 +132,13 @@ public class UserRealm extends AuthorizingRealm {
             return null;
         }
 
-        UserDTO userDTO = userService.getUser(username);
+        UserDO userDO = userService.getUserByUsername(username);
 
-        if (userDTO == null) {
+        if (userDO == null) {
             return null;
         }
 
-        return userDTO.getUserId();
+        return userDO.getUserId();
     }
 
     public SimpleAuthorizationInfo setRoles(Long userId) {

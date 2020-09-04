@@ -17,20 +17,15 @@ spring:
         max-idle: 8
         min-idle: 0
 
-  thymeleaf:
-    cache: false
 
 mybatis-plus:
-  type-aliases-package: com.meng.user.repository.entity
-  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.meng.user
 
-logging:
-  config: classpath:config/log4j2.yml
 
-# 自定义shiro属性配置类
+
 shiro:
   password:
     hash-algorithm: SHA-256
-    hash-iterations: 2
+    hash-iterations: 3
     stored-credentials-hex-encoded: true
 

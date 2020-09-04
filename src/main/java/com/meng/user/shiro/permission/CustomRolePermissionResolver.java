@@ -1,19 +1,15 @@
 package com.meng.user.shiro.permission;
 
-import com.meng.user.common.exception.BusinessException;
-import com.meng.user.service.system.PermissionService;
+import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.service.system.RoleService;
-import com.meng.user.service.system.entity.dto.PermissionDTO;
-import com.meng.user.service.system.entity.dto.RoleDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,20 +27,18 @@ import java.util.Set;
  *      并通过PermissionResolver解析为Permission实例；
  *      然后获取用户的角色，并通过RolePermissionResolver解析角色对应的权限集合（默认没有实现，可以自己提供）；
  *
- * 3、接着调用Permission. implies(Permission p)逐个与传入的权限比较，如果有匹配的则返回true，否则false。
+ * 3、接着调用Permission. implies(PermissionDO p)逐个与传入的权限比较，如果有匹配的则返回true，否则false。
  */
 public class CustomRolePermissionResolver implements RolePermissionResolver {
 
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private PermissionService permissionService;
 
     @Override
     public Collection<Permission> resolvePermissionsInRole(String roleName) {
 
-        List<Permission> permissions = new ArrayList<>();
         Set<String> permissionUrls = getPermissions(roleName);
+        Set<Permission> permissions = new LinkedHashSet<>(permissionUrls.size());
 
         for (String permissionUrl : permissionUrls) {
             permissions.add(new WildcardPermission(permissionUrl));
@@ -55,24 +49,19 @@ public class CustomRolePermissionResolver implements RolePermissionResolver {
 
     private Set<String> getPermissions(String roleName) {
 
-        Set<String> perms = new HashSet<>();
+        List<PermissionDO> permissions = roleService.listPermissions(roleName);
 
-        RoleDTO role = roleService.getRole(roleName);
+        Set<String> perms = new LinkedHashSet<>(permissions.size());
 
-        if (role == null) {
-            throw new BusinessException();
-        }
+        for (PermissionDO permission : permissions) {
 
-        List<PermissionDTO> permissions = permissionService.listPermissions(role.getRoleId());
+            String operation = permission.getOperation();
 
-        for (PermissionDTO permission : permissions) {
-
-            String url = permission.getUrl();
-
-            if (StringUtils.isNotBlank(url)) {
-                perms.add(url);
+            if (StringUtils.isNotBlank(operation)) {
+                perms.add(operation);
             }
         }
+
         return perms;
     }
 

@@ -1,15 +1,15 @@
 package com.meng.user.service.system.impl;
 
-import com.meng.user.common.util.BeanUtil;
-import com.meng.user.common.util.ResultUtil;
 import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.mapper.PermissionMapper;
 import com.meng.user.service.system.PermissionService;
-import com.meng.user.service.system.entity.dto.PermissionDTO;
+import com.meng.user.web.controller.entity.PermissionQuery;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,50 +25,39 @@ public class PermissionServiceImpl implements PermissionService {
     private final PermissionMapper permissionMapper;
 
     @Override
-    public PermissionDTO getPermission(Long permissionId) {
-
-        PermissionDO permissionDO = permissionMapper.selectById(permissionId);
-
+    public PermissionDO getPermission(Long permissionId) {
         return null;
     }
 
     @Override
-    public List<PermissionDTO> listPermissions() {
-
-        List<PermissionDO> permissionDOS = permissionMapper.selectList(null);
-
+    public List<PermissionDO> listPermissions() {
         return null;
     }
 
     @Override
-    public List<PermissionDTO> listPermissions(Long roleId) {
-        List<PermissionDO> permissionDOS = permissionMapper.listPermissions(roleId);
-        return BeanUtil.copyList(permissionDOS, PermissionDTO.class);
-    }
+    public List<PermissionDO> listPermissions(PermissionQuery permissionQuery) {
 
-    @Override
-    public boolean savePermission(PermissionDTO permissionDTO) {
-        return ResultUtil.returnBool(permissionMapper.insert(null));
-    }
+        List<PermissionDO> permissionDOS = permissionMapper.listPermissions(permissionQuery);
 
-    @Override
-    public boolean saveOrUpdatePermission(PermissionDTO permissionDTO) {
-
-        if (permissionDTO == null) {
-            return false;
+        if (CollectionUtils.isEmpty(permissionDOS)) {
+            return Collections.emptyList();
         }
-        Long permissionId = permissionDTO.getPermissionId();
 
-        return permissionId == null || getPermission(permissionId) == null ? savePermission(permissionDTO) : updatePermission(permissionDTO);
+        return permissionDOS;
     }
 
     @Override
-    public boolean updatePermission(PermissionDTO permissionDTO) {
-        return ResultUtil.returnBool(permissionMapper.updateById(null));
+    public void savePermission(PermissionDO permissionDODTO) {
+
     }
 
     @Override
-    public boolean deletePermission(Long permissionId) {
-        return ResultUtil.returnBool(permissionMapper.deleteById(permissionId));
+    public void updatePermission(PermissionDO permissionDODTO) {
+
+    }
+
+    @Override
+    public void deletePermission(Long permissionId) {
+
     }
 }
