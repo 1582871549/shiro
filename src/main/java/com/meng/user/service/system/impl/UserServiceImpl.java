@@ -47,6 +47,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserDO userDO) {
 
+        String salt = shiroHelper.getRandomSalt(16);
+
+        userDO.setPassword(encryption(userDO.getPassword(), salt));
+        userDO.setSalt(salt);
+
+        userMapper.insert(userDO);
     }
 
     @Override
@@ -60,22 +66,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updatePassword(String password) {
+    public void updatePassword(UserDO userDO) {
 
-        String salt = ShiroHelper.getRandomSalt(16);
+        UserDO user = getUser(userDO.getUserId());
 
-        return "";
+        String salt = user.getSalt();
+
+        String encryption = encryption(userDO.getPassword(), salt);
+
+        userDO.setPassword(encryption);
+
+        userMapper.updateById(userDO);
     }
 
-    /**
-     * 使用加密算法对密码进行加密
-     *
-     * @param password 密码
-     * @param salt 盐
-     * @return 加密后的密码
-     */
-    public String encryptionPassword(String password, String salt) {
-        return shiroHelper.sha256(password, salt);
+    @Override
+    public String encryption(String origPassword, String salt) {
+        return shiroHelper.sha256(origPassword, salt);
     }
 
     @Override

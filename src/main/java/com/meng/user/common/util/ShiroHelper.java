@@ -30,9 +30,9 @@ public class ShiroHelper {
      * 获取随机盐值
      *
      * @param length 字节长度，一个字节2位16进制数表示
-     * @return
+     * @return salt
      */
-    public static String getRandomSalt(int length) {
+    public String getRandomSalt(int length) {
         return new SecureRandomNumberGenerator().nextBytes(length).toHex();
     }
 
@@ -44,9 +44,6 @@ public class ShiroHelper {
      * @return 加密字符串
      */
     public String sha256(String credentials, String saltSource) {
-
-
-
         return new SimpleHash(
                 shiroProperties.getPassword().getHashAlgorithm(),
                 credentials,

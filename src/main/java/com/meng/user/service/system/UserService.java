@@ -19,8 +19,21 @@ public interface UserService {
     void deleteUser(UserDO userDO);
 
 
+    /**
+     * 修改密码
+     *
+     * @param userDO 用户id, 新密码
+     */
+    void updatePassword(UserDO userDO);
 
-    String updatePassword(String password);
+    /**
+     * 密码加密
+     *
+     * @param origPassword 原始密码
+     * @param salt 盐
+     * @return encrPassword 加密密码
+     */
+    String encryption(String origPassword, String salt);
 
     String encryptionPassword(String password, String salt);
 

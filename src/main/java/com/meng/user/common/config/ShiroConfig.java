@@ -146,10 +146,13 @@ public class ShiroConfig {
      */
     @Bean(name = "hashedCredentialsMatcher")
     public HashedCredentialsMatcher hashedCredentialsMatcher(ShiroProperties shiroProperties) {
+
+        ShiroProperties.Password password = shiroProperties.getPassword();
+
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(shiroProperties.getPassword().getHashAlgorithm());
-        hashedCredentialsMatcher.setHashIterations(shiroProperties.getPassword().getHashIterations());
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(shiroProperties.getPassword().isStoredCredentialsHexEncoded());
+        hashedCredentialsMatcher.setHashAlgorithmName(password.getHashAlgorithm());
+        hashedCredentialsMatcher.setHashIterations(password.getHashIterations());
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(password.isStoredCredentialsHexEncoded());
         return hashedCredentialsMatcher;
     }
 
