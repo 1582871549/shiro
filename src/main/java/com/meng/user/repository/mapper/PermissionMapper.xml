@@ -47,7 +47,9 @@
         t1.modified_time
     </sql>
 
-    <select id="listPermissions" resultMap="BaseResultMap" parameterType="com.meng.user.web.controller.entity.PermissionQuery">
+    <select id="listPermissions"
+            parameterType="com.meng.user.web.entity.PermissionQuery"
+            resultMap="BaseResultMap">
         SELECT
             <include refid="T1_Column_List"/>
         FROM

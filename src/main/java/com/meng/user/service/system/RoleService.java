@@ -2,7 +2,7 @@ package com.meng.user.service.system;
 
 import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.entity.RoleDO;
-import com.meng.user.web.controller.entity.RoleQuery;
+import com.meng.user.web.entity.RoleQuery;
 
 import java.util.List;
 import java.util.Set;

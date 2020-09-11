@@ -2,7 +2,7 @@ package com.meng.user.repository.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.meng.user.repository.entity.PermissionDO;
-import com.meng.user.web.controller.entity.PermissionQuery;
+import com.meng.user.web.entity.PermissionQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

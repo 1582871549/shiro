@@ -23,5 +23,14 @@ public class LoginController {
         return "index";
     }
 
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index() {
+
+        System.out.println("进入主页");
+
+        //如果已经登录，直接跳转主页面
+        return "index";
+    }
+
 
 }

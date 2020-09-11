@@ -1,5 +1,7 @@
 package com.meng.user.common.config;
 
+import com.meng.user.common.model.ShiroProperties;
+import com.meng.user.shiro.filter.CustomAuthcFilter;
 import com.meng.user.shiro.permission.CustomRolePermissionResolver;
 import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,7 +48,8 @@ public class ShiroConfig {
      * 它主要保持了三项数据，securityManager，filters，filterChainDefinitionManager。
      */
     @Bean(name = "shiroFilterFactoryBean")
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager,
+                                                         CustomAuthcFilter customAuthcFilter) {
 
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(securityManager);
@@ -55,10 +59,10 @@ public class ShiroConfig {
          *
          * 如果自定义filter导入异常, 直接new放入即可
          */
-        // Map<String, Filter> filtersMap = bean.getFilters();
-        // filtersMap.put("custom", customFilter);
+        Map<String, Filter> filtersMap = bean.getFilters();
+        filtersMap.put("custom", customAuthcFilter);
         // filtersMap.put("kaptcha", kaptchaFilter);
-        // bean.setFilters(filtersMap);
+        bean.setFilters(filtersMap);
 
 
         /*
@@ -76,14 +80,21 @@ public class ShiroConfig {
          *
          * authc:所有url都必须认证通过才可以访问
          * anon:所有url都都可以匿名访问
+         * DefaultFilter
          */
         Map<String, String> interceptsMap = new LinkedHashMap<>();
-        interceptsMap.put("/user/**", "authc");
+        interceptsMap.put("/user/**", "user");
+        interceptsMap.put("/role/**", "perms");
         interceptsMap.put("/static/**", "anon");
-        interceptsMap.put("/**", "authc");
+        interceptsMap.put("/**", "custom");
 
         bean.setFilterChainDefinitionMap(interceptsMap);
         return bean;
+    }
+
+    @Bean("customFormAuthenticationFilter")
+    public CustomAuthcFilter customFormAuthenticationFilter() {
+        return new CustomAuthcFilter();
     }
 
     /**
@@ -134,11 +145,11 @@ public class ShiroConfig {
      * @return hashedCredentialsMatcher
      */
     @Bean(name = "hashedCredentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+    public HashedCredentialsMatcher hashedCredentialsMatcher(ShiroProperties shiroProperties) {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("SHA-256");
-        hashedCredentialsMatcher.setHashIterations(2);
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
+        hashedCredentialsMatcher.setHashAlgorithmName(shiroProperties.getPassword().getHashAlgorithm());
+        hashedCredentialsMatcher.setHashIterations(shiroProperties.getPassword().getHashIterations());
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(shiroProperties.getPassword().isStoredCredentialsHexEncoded());
         return hashedCredentialsMatcher;
     }
 

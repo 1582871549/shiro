@@ -1,6 +1,5 @@
 package com.meng.user.shiro.realm;
 
-import com.meng.user.common.util.ShiroHelper;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.service.system.RoleService;
 import com.meng.user.service.system.UserService;
@@ -9,9 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -63,7 +60,10 @@ public class UserRealm extends AuthorizingRealm {
         String username = String.valueOf(token.getPrincipal());
 
         if (StringUtils.isBlank(username)) {
-            throw new AuthenticationException();
+            log.debug("current token's username is null.");
+            throw new RuntimeException("用户名不能为空");
+        } else {
+            log.debug("current token's : {}", username);
         }
 
         System.out.println("当前登陆密码" + token.getCredentials());
@@ -73,14 +73,16 @@ public class UserRealm extends AuthorizingRealm {
         UserDO userDO = userService.getUserByUsername(username);
 
         if (userDO == null) {
-            throw new UnknownAccountException("账号不存在");
+            // throw new BusinessException(ResultEnum.USER_NOT_EXIST);
+            System.out.println("用户不存在");
+            throw new RuntimeException("用户不存在");
         }
 
         if (userDO.getLocked()) {
-            throw new LockedAccountException("账号已锁定");
+            // throw new BusinessException(ResultEnum.USER_LOCKED);
+            System.out.println("用户锁定");
+            throw new RuntimeException("用户锁定");
         }
-
-        ShiroHelper.setSessionAttribute("userDO", userDO);
 
         // org.apache.shiro.authc.credential.DefaultPasswordService
 

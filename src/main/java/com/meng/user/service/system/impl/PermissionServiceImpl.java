@@ -3,7 +3,7 @@ package com.meng.user.service.system.impl;
 import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.mapper.PermissionMapper;
 import com.meng.user.service.system.PermissionService;
-import com.meng.user.web.controller.entity.PermissionQuery;
+import com.meng.user.web.entity.PermissionQuery;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;

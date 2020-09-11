@@ -1,7 +1,7 @@
 package com.meng.user.service.system;
 
 import com.meng.user.repository.entity.PermissionDO;
-import com.meng.user.web.controller.entity.PermissionQuery;
+import com.meng.user.web.entity.PermissionQuery;
 
 import java.util.List;
 

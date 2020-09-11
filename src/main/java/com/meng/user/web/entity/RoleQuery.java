@@ -1,4 +1,4 @@
-package com.meng.user.web.controller.entity;
+package com.meng.user.web.entity;
 
 import lombok.Data;
 

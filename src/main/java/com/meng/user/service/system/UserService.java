@@ -22,5 +22,7 @@ public interface UserService {
 
     String updatePassword(String password);
 
+    String encryptionPassword(String password, String salt);
+
     void login(UserDO userDO);
 }
