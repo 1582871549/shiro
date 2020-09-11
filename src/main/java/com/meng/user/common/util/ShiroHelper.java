@@ -1,11 +1,14 @@
 package com.meng.user.common.util;
 
+import com.meng.user.common.model.ShiroProperties;
 import com.meng.user.repository.entity.UserDO;
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.stereotype.Component;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -15,25 +18,21 @@ import org.apache.shiro.subject.Subject;
  * @create 2019/8/8
  * @since 1.0.0
  */
+@Component
+@RequiredArgsConstructor
 public class ShiroHelper {
 
     private static final String NAMES_DELIMETER = ",";
-    /**
-     * 散列算法
-     */
-    private static final String HASH_ALGORITHM_NAME = "MD5";
-    /**
-     * 循环次数
-     */
-    private static final int HASH_ITERATIONS = 2;
+
+    private final ShiroProperties shiroProperties;
 
     /**
      * 获取随机盐值
      *
      * @param length 字节长度，一个字节2位16进制数表示
-     * @return
+     * @return salt
      */
-    public static String getRandomSalt(int length) {
+    public String getRandomSalt(int length) {
         return new SecureRandomNumberGenerator().nextBytes(length).toHex();
     }
 
@@ -44,19 +43,13 @@ public class ShiroHelper {
      * @param saltSource  密码盐
      * @return 加密字符串
      */
-    public static String md5(String credentials, String saltSource) {
-        return new SimpleHash(HASH_ALGORITHM_NAME, credentials, saltSource, HASH_ITERATIONS).toHex();
-    }
-
-    /**
-     * shiro密码加密工具类
-     *
-     * @param credentials 密码
-     * @param saltSource  密码盐
-     * @return 加密字符串
-     */
-    public static String sha256(String credentials, String saltSource) {
-        return new SimpleHash(HASH_ALGORITHM_NAME, credentials, saltSource, HASH_ITERATIONS).toHex();
+    public String sha256(String credentials, String saltSource) {
+        return new SimpleHash(
+                shiroProperties.getPassword().getHashAlgorithm(),
+                credentials,
+                saltSource,
+                shiroProperties.getPassword().getHashIterations()
+        ).toHex();
     }
 
     /**

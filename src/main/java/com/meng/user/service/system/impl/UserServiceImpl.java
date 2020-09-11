@@ -25,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final ShiroHelper shiroHelper;
     private final UserMapper userMapper;
 
     @Override
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserDO userDO) {
 
+        String salt = shiroHelper.getRandomSalt(16);
+
+        userDO.setPassword(encryption(userDO.getPassword(), salt));
+        userDO.setSalt(salt);
+
+        userMapper.insert(userDO);
     }
 
     @Override
@@ -58,11 +65,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updatePassword(String password) {
+    public void updatePassword(UserDO userDO) {
 
-        String salt = ShiroHelper.getRandomSalt(16);
+        UserDO user = getUser(userDO.getUserId());
 
-        return ShiroHelper.sha256(password, salt);
+        String salt = user.getSalt();
+
+        String encryption = encryption(userDO.getPassword(), salt);
+
+        userDO.setPassword(encryption);
+
+        userMapper.updateById(userDO);
+    }
+
+    @Override
+    public String encryption(String origPassword, String salt) {
+        return shiroHelper.sha256(origPassword, salt);
     }
 
     @Override

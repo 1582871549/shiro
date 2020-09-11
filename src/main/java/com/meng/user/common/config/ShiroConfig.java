@@ -1,5 +1,6 @@
 package com.meng.user.common.config;
 
+import com.meng.user.common.model.ShiroProperties;
 import com.meng.user.shiro.permission.CustomRolePermissionResolver;
 import com.meng.user.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -134,11 +135,14 @@ public class ShiroConfig {
      * @return hashedCredentialsMatcher
      */
     @Bean(name = "hashedCredentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+    public HashedCredentialsMatcher hashedCredentialsMatcher(ShiroProperties shiroProperties) {
+
+        ShiroProperties.Password password = shiroProperties.getPassword();
+
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("SHA-256");
-        hashedCredentialsMatcher.setHashIterations(2);
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
+        hashedCredentialsMatcher.setHashAlgorithmName(password.getHashAlgorithm());
+        hashedCredentialsMatcher.setHashIterations(password.getHashIterations());
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(password.isStoredCredentialsHexEncoded());
         return hashedCredentialsMatcher;
     }
 
