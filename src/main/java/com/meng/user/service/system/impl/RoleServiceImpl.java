@@ -1,7 +1,6 @@
 package com.meng.user.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.meng.user.common.enums.PermissionTypeEnum;
 import com.meng.user.repository.entity.PermissionDO;
 import com.meng.user.repository.entity.RoleDO;
 import com.meng.user.repository.mapper.RoleMapper;
@@ -111,7 +110,6 @@ public class RoleServiceImpl implements RoleService {
 
         PermissionQuery permissionQuery = new PermissionQuery();
         permissionQuery.setRoleId(roleDO.getRoleId());
-        permissionQuery.setType(PermissionTypeEnum.BUTTON.getType());
         permissionQuery.setActivation(true);
 
         return permissionService.listPermissions(permissionQuery);

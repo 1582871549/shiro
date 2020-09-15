@@ -8,7 +8,6 @@ import com.meng.user.repository.mapper.UserMapper;
 import com.meng.user.service.system.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
@@ -94,13 +93,7 @@ public class UserServiceImpl implements UserService {
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
-        try {
-            currentUser.login(token);
-        } catch (AuthenticationException e) {
-            // throw new BusinessException("密码或用户名错误");
-            throw new RuntimeException("密码或用户名错误");
-        }
-
+        currentUser.login(token);
 
         UserDO user = getUserByUsername(username);
 

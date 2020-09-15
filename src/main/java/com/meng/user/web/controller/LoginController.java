@@ -15,12 +15,19 @@ public class LoginController {
 
     private final UserService userService;
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+
+        System.out.println("进入登录页");
+
+        return "登录页";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@RequestBody UserDO userDO) {
 
         String token = userService.login(userDO);
 
-        //如果已经登录，直接跳转主页面
         return token;
     }
 
@@ -30,8 +37,7 @@ public class LoginController {
 
         System.out.println("进入主页");
 
-        //如果已经登录，直接跳转主页面
-        return "index";
+        return "主页";
     }
 
 

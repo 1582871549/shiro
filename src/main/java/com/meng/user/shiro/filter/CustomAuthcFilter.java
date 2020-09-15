@@ -32,7 +32,7 @@ public class CustomAuthcFilter extends FormAuthenticationFilter {
         }
     }
 
-    protected String getToken(ServletRequest servletRequest) {
+    private String getToken(ServletRequest servletRequest) {
 
         HttpServletRequest request = WebUtils.toHttp(servletRequest);
 
@@ -66,7 +66,7 @@ public class CustomAuthcFilter extends FormAuthenticationFilter {
     /**
      * 登录成功直接处理重定向，阻止链式拦截器的继续
      */
-    protected boolean onLoginSuccess(ServletRequest request, ServletResponse response) throws Exception {
+    private boolean onLoginSuccess(ServletRequest request, ServletResponse response) throws Exception {
         issueSuccessRedirect(request, response);
         return false;
     }
@@ -74,7 +74,7 @@ public class CustomAuthcFilter extends FormAuthenticationFilter {
     /**
      * 登录失败，让请求继续返回登录页面:
      */
-    protected boolean onLoginFailure(ServletRequest request, ServletResponse response) {
+    private boolean onLoginFailure(ServletRequest request, ServletResponse response) {
         return true;
     }
 

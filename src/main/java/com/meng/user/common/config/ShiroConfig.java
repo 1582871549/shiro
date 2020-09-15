@@ -109,8 +109,8 @@ public class ShiroConfig {
                                            ModularRealmAuthorizer modularRealmAuthorizer) {
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(userRealm);
         securityManager.setAuthorizer(modularRealmAuthorizer);
+        securityManager.setRealm(userRealm);
         securityManager.setRememberMeManager(rememberMeManager);
         return securityManager;
     }

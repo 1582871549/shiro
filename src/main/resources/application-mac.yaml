@@ -27,5 +27,5 @@ shiro:
   password:
     hash-algorithm: SHA-256
     hash-iterations: 2
-    stored-credentials-hex-encoded: false
+    stored-credentials-hex-encoded: true
 
