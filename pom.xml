@@ -33,21 +33,9 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- jwt -->
@@ -56,23 +44,6 @@
             <artifactId>java-jwt</artifactId>
             <version>3.3.0</version>
         </dependency>
-
-        <!-- tomcat-spring -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- 因为SpringBootServletInitializer需要依赖 javax.servlet，
-             而tomcat-embed-jasper下面的tomcat-embed-core中就有这个javax.servlet，
-             如果没用provided，最终打好的war里面会有servlet-api这个jar，这样就会跟tomcat本身的冲突了 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
 
         <!-- shiro -->
         <dependency>

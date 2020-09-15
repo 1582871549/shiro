@@ -1,6 +1,7 @@
 package com.meng.user.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.meng.user.common.util.JwtHelper;
 import com.meng.user.common.util.ShiroHelper;
 import com.meng.user.repository.entity.UserDO;
 import com.meng.user.repository.mapper.UserMapper;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,31 +85,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(UserDO userDO) {
+    public String login(UserDO userDO) {
+
         String username = userDO.getUsername();
         String password = userDO.getPassword();
 
-        // 检查用户状态
-        // if (userMapper.getUserLocked(username)) {
-        //     throw new BusinessException("该用户已锁定");
-        // }
-
         Subject currentUser = SecurityUtils.getSubject();
 
-        if (currentUser.isAuthenticated()) {
-            return;
-        }
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
         try {
             currentUser.login(token);
         } catch (AuthenticationException e) {
             // throw new BusinessException("密码或用户名错误");
+            throw new RuntimeException("密码或用户名错误");
         }
 
-        Session session = currentUser.getSession();
 
-        session.setAttribute("username", username);
+        UserDO user = getUserByUsername(username);
+
+        return JwtHelper.sign(username, user.getPassword());
     }
 
 }

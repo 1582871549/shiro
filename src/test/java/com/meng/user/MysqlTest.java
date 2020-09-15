@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class MysqlTest {
         String password = "123456";
         String salt = "fece55e12415be20dea3a31ddbb8482f";
 
-        String encryptionPassword = userService.encryptionPassword(password, salt);
+        String encryptionPassword = userService.encryption(password, salt);
 
         System.out.println(encryptionPassword);
         System.out.println(encryptionPassword);
@@ -85,9 +86,7 @@ public class MysqlTest {
         byte[] storedBytes1 = Hex.decode(storedBytes);
         // byte[] storedBytes2 = Base64.decode(storedBytes);
 
-        System.out.println(storedBytes1);
-        System.out.println(storedBytes1);
-        System.out.println(storedBytes1);
+        System.out.println(Arrays.toString(storedBytes1));
 
     }
 

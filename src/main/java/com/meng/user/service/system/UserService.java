@@ -35,5 +35,5 @@ public interface UserService {
      */
     String encryption(String origPassword, String salt);
 
-    void login(UserDO userDO);
+    String login(UserDO userDO);
 }
